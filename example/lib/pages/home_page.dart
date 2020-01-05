@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:copyapp_example/pages/player_page.dart';
+
 import '../core.dart';
 import '../movie_model.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +22,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   bool get wantKeepAlive => true;
 
   _itemClick(id) {
+    print("click");
     var movieModel = Provider.of<MovieModel>(context);
 //    movieModel.changeTitle();
     movieModel.choose(id);
@@ -30,6 +33,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           builder: (context) => WebPage(
             movie: movie
           )
+        )
+    );
+  }
+
+  _play(movie){
+    print("play");
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => PlayerPage(
+                movie: movie
+            )
         )
     );
   }
@@ -113,7 +128,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     margin: EdgeInsets.only(left: 30),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: _getImage(_movies[id]["image"]),
+                      child: GestureDetector(
+                        onTap: (){_play(_movies[id]);},
+                        child: _getImage(_movies[id]["image"]),
+                      )
                     ),
                   )
                 ],
@@ -135,6 +153,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "home",
         onPressed: (){_update();},
         child: Icon(Icons.autorenew),
       ),

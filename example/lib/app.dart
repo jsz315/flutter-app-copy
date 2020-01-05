@@ -1,4 +1,5 @@
-import './pages/about_page.dart';
+import 'package:copyapp_example/pages/image_page.dart';
+
 import './pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,7 +45,7 @@ class _AppState extends State<App> {
           children: <Widget>[
             new HomePage(),
             new DetailPage(),
-            new AboutPage(),
+            new ImagePage()
           ],
         ),
       ) ,

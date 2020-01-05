@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import '../core.dart';
 
@@ -19,6 +20,7 @@ class DownloadTooler{
   void init(){
     createDir("$dir/image");
     createDir("$dir/video");
+    createDir("$dir/capture");
   }
 
   void createDir(path){
@@ -31,9 +33,9 @@ class DownloadTooler{
 
   Future<void> load(url, type) async{
     var list = url.split("/");
-    var fname = list[list.length - 1];
+    var fname = getTimer();
     var dio = new Dio();
-    var path = type == 1 ? "$dir/image/$fname" : "$dir/video/$fname";
+    var path = type == 1 ? "$dir/image/$fname.jpg" : "$dir/video/$fname.mp4";
     // deleteFile(path);
     print(path);
     Response response = await dio.download(url, path);
@@ -81,6 +83,20 @@ class DownloadTooler{
     // var sql = new SqlTooler();r
     // await sql.init();
     // await sql.test();
+  }
+
+  int getTimer(){
+    var today = DateTime.now();
+    var timer = today.millisecondsSinceEpoch;
+    return timer;
+  }
+
+  Future<void> saveImage(Uint8List bytes) async{
+    var timer = getTimer();
+    var path = "$dir/capture/$timer.png";
+    var file = new File(path);
+    file.writeAsBytesSync(bytes);
+    Core.instance.sqlTooler.save(path);
   }
 
   Future<void> writeData(url) async{

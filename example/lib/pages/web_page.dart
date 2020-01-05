@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../tooler/string_tooler.dart';
 import '../tooler/toast_tooler.dart';
 
 import '../core.dart';
@@ -22,6 +23,7 @@ class WebPage extends StatefulWidget {
 class _WebPageState extends State<WebPage> {
 
   WebViewController _webViewController;
+  List<String> _tips = [];
   String _title = "";
   var _movie;
 
@@ -40,13 +42,7 @@ class _WebPageState extends State<WebPage> {
 
   void _callJavascript(){
     // var js = 'document.querySelector("#logo").style.backgroundColor="#440099";';
-    var js = [
-      'var video = document.querySelector("video");',
-      'var src = video.getAttribute("src");',
-      'var poster = video.getAttribute("poster");',
-      'JSON.stringify({src, poster})'
-      // 'src + "," + poster'
-    ].join("");
+    var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
       print(res);
       String str1 = res.toString();
@@ -56,6 +52,9 @@ class _WebPageState extends State<WebPage> {
       // DownloadTooler.start(item["poster"], item["src"]);
       await Core.instance.downloadTooler.start(_movie["id"], item["poster"], item["src"]);
       ToastTooler.toast(context, msg: "下载成功", position: ToastPostion.bottom);
+      setState(() {
+        _tips.add("下载成功");
+      });
     });
     
   }
@@ -64,10 +63,30 @@ class _WebPageState extends State<WebPage> {
     _webViewController.evaluateJavascript("document.title").then((res){
       setState(() {
         _title = res;
+        _tips.add("获取标题成功");
       });
       // _movie["title"] = res;
       Core.instance.sqlTooler.updateTitle(_movie["id"], res);
     });
+  }
+
+  Widget _getTips(){
+    return ListView.builder(
+      itemCount: _tips.length,
+      itemBuilder: (BuildContext context, int id){
+        return Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Color.fromARGB(120, 0, 0, 0),
+            border: Border(bottom: BorderSide(
+              color: Color.fromARGB(80, 0, 0, 0),
+              width: 1
+            ))
+          ),
+          child:Text(_tips[id], style: TextStyle(color: Colors.amber),)
+        );
+      },
+    );
   }
 
   @override
@@ -76,29 +95,46 @@ class _WebPageState extends State<WebPage> {
     // _movie = movieModel.movies[movieModel.index];
     print("build current movie");
     print(_movie);
+
+    Widget listView = _getTips();
     
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
       ),
-      body: WebView(
-        initialUrl: _movie["link"],
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController){
-          _webViewController = webViewController;
-        },
-        onPageFinished: (url){
-          _setTitle();
-        },
-        navigationDelegate: (NavigationRequest navigationRequest){
-          // if(navigationRequest.url.startsWith("http://")){
-          //   return NavigationDecision.prevent;
-          // }
-          print(navigationRequest.url);
-          return NavigationDecision.navigate;
-        },
-      ),
+      body: Stack(
+        children: <Widget>[
+          WebView(
+            initialUrl: _movie["link"],
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController){
+              _webViewController = webViewController;
+            },
+            onPageFinished: (url){
+              _setTitle();
+            },
+            navigationDelegate: (NavigationRequest navigationRequest){
+              // if(navigationRequest.url.startsWith("http://")){
+              //   return NavigationDecision.prevent;
+              // }
+              print(navigationRequest.url);
+              return NavigationDecision.navigate;
+            },
+          ),
+          Positioned(
+            left: 20,
+            top: 20,
+            width: MediaQuery.of(context).size.width - 40,
+            height: 200,
+            child: Container(
+              child: listView,
+            ),
+          )
+        ],
+      ), 
+      
       floatingActionButton: FloatingActionButton(
+        heroTag: "web",
         child: Icon(Icons.archive),
         onPressed: (){
           _callJavascript();
@@ -107,20 +143,3 @@ class _WebPageState extends State<WebPage> {
     );
   }
 }
-
-// class Movie {
-//   final String src;
-//   final String poster;
-
-//   Movie(this.src, this.poster);
-
-//   Movie.fromJson(Map<dynamic, dynamic> json)
-//       : src = json['src'],
-//         poster = json['poster'];
-
-//   Map<dynamic, dynamic> toJson() =>
-//     {
-//       'src': src,
-//       'poster': poster,
-//     };
-// }

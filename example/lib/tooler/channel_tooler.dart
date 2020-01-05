@@ -38,13 +38,17 @@ class ChannelTooler{
     _listeners.add(systemListener);
   }
 
-  Future<String> info() async{
-    var res = await _methodChannel.invokeMethod("getPlatformVersion");
+  Future<String> checkRunning() async{
+    var res = await _methodChannel.invokeMethod("checkRunning");
     return res;
   }
+  
+  Future<void> setRunning(running) async{
+    await _methodChannel.invokeMethod("setRunning", <String, bool>{"running": running});
+  }
 
-  Future<String> run(runing) async{
-    var res = await _methodChannel.invokeMethod("getPlatformVersion");
+  Future<bool> getRunning() async{
+    var res = await _methodChannel.invokeMethod("getRunning");
     return res;
   }
 }

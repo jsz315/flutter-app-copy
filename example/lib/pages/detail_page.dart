@@ -1,5 +1,7 @@
+import './player_page.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../core.dart';
 import '../tooler/channel_tooler.dart';
 
 import '../core.dart';
@@ -20,7 +22,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMixin implements SystemListener {
 
-  bool _runing = false;
+  bool _running = false;
   var _copyData = "暂无";
 
   @override
@@ -28,8 +30,7 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   void initState(){
     super.initState();
-    // _runing = false;
-    print("initState");
+    _getRunning();
   }
 
   @override
@@ -47,17 +48,34 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     });
   }
 
-  void _callOs() async{
-    var res = await Core.instance.channelTooler.info();
-    print(res);
-    ToastTooler.toast(context, msg: res);
+  void _getRunning() async{
+    var res = await Core.instance.channelTooler.getRunning();
+    setState(() {
+      _running = res;
+    });
   }
 
-  void _changeRuning(c){
+  void _checkRunning() async{
+    var res = await Core.instance.channelTooler.checkRunning();
+    ToastTooler.toast(context, msg: res);
+
+//    var today = DateTime.now();
+//    print('当前时间是：$today');
+//    var date1 = today.millisecondsSinceEpoch;
+//    print('当前时间戳：$date1');
+//    var date2 = DateTime.fromMillisecondsSinceEpoch(date1);
+//    print('时间戳转日期：$date2');
+//    //拼接成date
+//    var dentistAppointment = new DateTime(2019, 6, 20, 17, 30,20);
+//    print(dentistAppointment);
+  }
+
+  void _setRunning(c) async{
+    await Core.instance.channelTooler.setRunning(c);
     setState(() {
-      _runing = c;
+      _running = c;
     });
-    ToastTooler.toast(context, msg: "check", position: ToastPostion.bottom);
+    // ToastTooler.toast(context, msg: "check", position: ToastPostion.bottom);
   }
 
   void _addWord() async{
@@ -79,6 +97,17 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     movieModel.update(movies);
   }
 
+  void _playVideo(){
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => PlayerPage(
+                movie: {}
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -98,8 +127,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
                 child: Text("开启服务"),
               ),
               CupertinoSwitch(
-                value: _runing,
-                onChanged: _changeRuning,
+                value: _running,
+                onChanged: _setRunning,
               )
             ],),
             Container(
@@ -118,11 +147,17 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
                   ),
                   MaterialButton(
                     color: Colors.amber,
-                    child: new Text('调用系统方法'),
-                    onPressed: (){_callOs();},
+                    child: new Text('系统方法'),
+                    onPressed: (){_checkRunning();},
                   ),
+
                 ],
               ),
+            ),
+            MaterialButton(
+              color: Colors.amber,
+              child: new Text('播放视频'),
+              onPressed: (){_playVideo();},
             ),
             Container(
               padding: EdgeInsets.all(20),

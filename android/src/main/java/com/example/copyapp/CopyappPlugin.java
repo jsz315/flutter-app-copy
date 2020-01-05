@@ -14,7 +14,9 @@ import io.flutter.plugin.common.EventChannel;
 
 /** CopyappPlugin */
 public class CopyappPlugin implements FlutterPlugin {
+
   public static EventChannel.EventSink eventSink;
+  public static boolean running = true;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -26,12 +28,16 @@ public class CopyappPlugin implements FlutterPlugin {
     new MethodChannel(flutterEngine, "jsz_plugin_method").setMethodCallHandler(new MethodCallHandler() {
       @Override
       public void onMethodCall(MethodCall call, Result result) {
-        if (call.method.equals("getPlatformVersion")) {
-          result.success("Androids " + android.os.Build.VERSION.RELEASE);
+        if (call.method.equals("checkRunning")) {
+          result.success("系统调用正常");
         }
         else if(call.method.equals("getRunning")){
-          int n = call.argument("num");
-          result.success(n);
+          result.success(running);
+        }
+        else if(call.method.equals("setRunning")){
+          boolean r = call.argument("running");
+          running = r;
+          result.success(running);
         }
         else {
           result.notImplemented();
