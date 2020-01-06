@@ -25,6 +25,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
   bool _running = false;
   var _copyData = "暂无";
 
+  TextEditingController textEditingController = new TextEditingController();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -158,6 +160,17 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               color: Colors.amber,
               child: new Text('播放视频'),
               onPressed: (){_playVideo();},
+            ),
+            TextField(
+              controller: textEditingController,
+                decoration: InputDecoration(
+                  prefixIcon:Icon(Icons.folder),
+                  labelText: "目录名称",
+                  hintText: "请输入视频目录名称",
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
             ),
             Container(
               padding: EdgeInsets.all(20),

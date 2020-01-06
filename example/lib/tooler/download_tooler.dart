@@ -18,13 +18,13 @@ class DownloadTooler{
   DownloadTooler();
 
   void init(){
-    createDir("$dir/image");
-    createDir("$dir/video");
-    createDir("$dir/capture");
+    createDir("image");
+    createDir("video");
+    createDir("capture");
   }
 
-  void createDir(path){
-    var directory = new Directory(path);
+  void createDir(fname){
+    var directory = new Directory("$dir/$fname");
     if(!directory.existsSync()){
       directory.createSync();
       print(directory.absolute.path);
@@ -53,11 +53,37 @@ class DownloadTooler{
     }
   }
 
-  void deleteFile(path) async{
-    var file = new File(path);
-    if(file.existsSync()){
-      await file.delete();
-      print("【删除成功】" + path);
+  Future<void> deleteFile(item) async{
+    var path = item["video"];
+    if(path != null){
+      var file = new File(path);
+      if(file.existsSync()){
+        await file.delete();
+        print("【删除成功】" + path);
+      }
+      else{
+        print("【文件不存在】" + path);
+      }
+    }
+    else{
+      print("【文件不存在】");
+    }
+    await Core.instance.sqlTooler.deleteVideo(item["id"]);
+  }
+
+  Future<void> moveFile(item, folder) async{
+    var path = item["video"];
+    if(path != null){
+      var file = new File(path);
+      var newPath = path.toString().replaceFirst("/video", "/$folder");
+      if(file.existsSync()){
+        await file.rename(newPath);
+        print("【移动成功】" + newPath);
+      }
+      else{
+        print("【文件不存在】" + path);
+      }
+      await Core.instance.sqlTooler.moveVideo(item["id"], newPath);
     }
     else{
       print("【文件不存在】" + path);

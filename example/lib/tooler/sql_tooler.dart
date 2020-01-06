@@ -155,7 +155,7 @@ class SqlTooler{
     });
   }
 
-  Future<void> delete(id) async{
+  Future<void> deleteVideo(id) async{
     var database = await db;
     var count = await database.rawDelete('DELETE FROM $videoTableName WHERE id = ?', [id]);
     print('count: $count');
@@ -183,6 +183,21 @@ class SqlTooler{
     List<Map> list = await database.rawQuery('SELECT * FROM $captureTableName');
     print(list);
     return list;
+  }
+
+  Future<void> deleteVideos(list) async{
+    var database = await db;
+    for(var i = 0; i < list.length; i++){
+      await database.rawDelete('DELETE FROM $videoTableName WHERE id = ?', [list[i]]);
+    }
+  }
+
+  Future<void> moveVideo(id, path) async{
+    var database = await db;
+    await database.rawUpdate(
+        'UPDATE $videoTableName SET video = ? WHERE id = ?',
+        [path, id]
+    );
   }
 
 }
