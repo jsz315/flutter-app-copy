@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:copyapp_example/components/check_box.dart';
+import 'package:copyapp_example/components/edit_frame.dart';
+import 'package:copyapp_example/tooler/event_tooler.dart';
 import 'package:provider/provider.dart';
 
 import './player_page.dart';
@@ -18,10 +21,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   var _movies = [];
-  var _allSelected = false;
   var _isEdit = false;
   var _selectedList = [];
-  TextEditingController _textEditingController = new TextEditingController();
+  var _tip = "home";
 
   @override
   bool get wantKeepAlive => true;
@@ -52,15 +54,16 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Image _getImage(path){
+  Image _getImage(item){
+    var path = item["image"];
     if(path == null){
-      return Image.network(
-        "https://oimagec4.ydstatic.com/image?id=-5397300958976572132&product=adpublish&w=520&h=347",
+      return Image.asset(
+        "assets/images/wgj.jpg",
         fit: BoxFit.cover
       );
     }
     return Image.file(
-      File(path),
+      File(Core.instance.downloadTooler.getPosterPath(item)),
       fit: BoxFit.cover,
     );
   }
@@ -69,21 +72,50 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   void initState() {
     // TODO: implement initState
     super.initState();
-//    _textEditingController.addListener(listener)
   }
 
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
+
     _update();
+
+    Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
+      print("--EditEvent--");
+      if(e.tip == _tip){
+        setState(() {
+          _isEdit = e.edit;
+        });
+      }
+    });
+
+    Core.instance.eventTooler.eventBus.on<SelectEvent>().listen((e){
+      print("--SelectEvent--");
+      if(e.tip == _tip){
+        _chooseAll(e.select);
+      }
+    });
+
+    Core.instance.eventTooler.eventBus.on<DeleteEvent>().listen((e){
+      print("--DeleteEvent--");
+      if(e.tip == _tip){
+        _deleteItems();
+      }
+    });
+
+    Core.instance.eventTooler.eventBus.on<MoveEvent>().listen((e){
+      print("--MoveEvent--");
+      if(e.tip == _tip){
+        _moveItems(e.tag);
+      }
+    });
+    
   }
 
   Future<void> _update() async{
     List<Map> movies = await Core.instance.sqlTooler.movies();
     var movieModel = Provider.of<MovieModel>(context);
     movieModel.update(movies);
-    // var movieModel = Provider.of<MovieModel>(context);
-    // var movies = movieModel.movies;
     var slist = [];
     movies.forEach((val){
       slist.add(false);
@@ -97,7 +129,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   void _chooseAll(c){
     setState(() {
-      _allSelected = c;
       for(var i = 0; i < _selectedList.length; i++){
         _selectedList[i] = c;
       }
@@ -111,106 +142,31 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     });
   }
 
-  void _togglerEdit(){
-    setState(() {
-      _isEdit = !_isEdit;
-    });
-  }
+  // void _togglerEdit(c){
+  //   setState(() {
+  //     _isEdit = c;
+  //   });
+  // }
 
   Future<void> _deleteItems() async{
-    var list = [];
     for(var i = 0; i < _selectedList.length; i++){
       if(_selectedList[i]){
-//        var id = _movies[i]["id"];
-//        list.add(id);
-        await Core.instance.downloadTooler.deleteFile(_movies[i]);
+        await Core.instance.downloadTooler.deleteVideoItem(_movies[i]);
       }
     }
     await _update();
   }
 
-  Future<void> _moveItems(fname) async{
-     Core.instance.downloadTooler.createDir(fname);
+  Future<void> _moveItems(tag) async{
+    print("创建目录 $tag");
+     Core.instance.downloadTooler.createVideoTagDir(tag);
+     Core.instance.downloadTooler.createPosterTagDir(tag);
      for(var i = 0; i < _selectedList.length; i++){
        if(_selectedList[i]){
-         await Core.instance.downloadTooler.moveFile(_movies[i], fname);
+         await Core.instance.downloadTooler.moveVideoItem(_movies[i], tag);
        }
      }
      await _update();
-  }
-
-  _popInput(){
-    showDialog(
-      context: context,
-      builder: (context){
-        return AlertDialog(
-          content: Column(children: <Widget>[
-            TextField(
-                  controller: _textEditingController,
-                    decoration: InputDecoration(
-                      prefixIcon:Icon(Icons.folder),
-                      labelText: "目录名称",
-                      hintText: "请输入视频目录名称",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                ),
-          ],),
-          title: Center(
-            child: Text(
-            '移动视频',
-            style: TextStyle(
-              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
-          )),
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _moveItems(_textEditingController.text);
-                },
-                child: Text('确定')),
-            FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('取消')),
-          ],
-        );
-      }
-    );
-  }
-
-  Widget _getAppBar(){
-    var list = <Widget>[
-      Expanded(
-          child: Center(
-            child: Text("视频列表", style: TextStyle(color: Colors.white, fontSize: 18),),
-          )
-      ),
-      GestureDetector(
-          onTap: (){_togglerEdit();},
-          child: Container(
-            margin: EdgeInsets.only(right: 30),
-            child:Text(_isEdit ? "完成" : "编辑", style: TextStyle(color: Colors.white),),
-          )
-      )
-    ];
-
-    if(_isEdit){
-      list.insert(0, Text("全选", style: TextStyle(color: Colors.white),));
-      list.insert(0, Checkbox(
-        value: _allSelected,
-        onChanged: (c){_chooseAll(c);},
-      ));
-    }
-
-    return Container(
-      height: 40,
-      child: Row(
-          children: list
-      )
-    );
   }
 
   Widget _getItem(id){
@@ -229,9 +185,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             Container(
               child: Row(
                 children: <Widget>[
-                  Expanded(child: Text("01/06 12:24", style: TextStyle(color: Colors.black12),),),
+                  Expanded(child: Text(_movies[id]["time"], style: TextStyle(color: Colors.black12),),),
                   Container(
-                    child: Text("默认", style: TextStyle(fontSize: 10),),
+                    child: Text(
+                      _movies[id]["tag"] == null ? "默认" : _movies[id]["tag"],
+                      style: TextStyle(fontSize: 10),),
                     padding: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
@@ -254,14 +212,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             borderRadius: BorderRadius.circular(4),
             child: GestureDetector(
               onTap: (){_play(_movies[id]);},
-              child: _getImage(_movies[id]["image"]),
+              child: _getImage(_movies[id]),
             )
         ),
       )
     ];
 
     if(_isEdit){
-      list.insert(0, Checkbox(
+      list.insert(0, CheckBox(
         value: _selectedList[id],
         onChanged: (c){_chooseOne(c, id);},
       ));
@@ -296,51 +254,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           return _getItem(id);
         });
 
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          floatingActionButton: FloatingActionButton(
-            heroTag: "home",
-            onPressed: (){_update();},
-            child: Icon(Icons.autorenew),
-          ),
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child:  _getAppBar(),
-                  decoration: BoxDecoration(
-                    color: Colors.black26
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: RefreshIndicator(child: _listView, onRefresh: _update) ,
-                ),
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          left: 80,
-          bottom: _isEdit ? 16 : -60,
-          child: Center(
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever), label: Text("删除")),
-                  FlatButton.icon(onPressed: (){_popInput();}, icon: Icon(Icons.move_to_inbox), label: Text("移动"))
-                ],
-              ),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(180, 255, 240, 0),
-                borderRadius: BorderRadius.circular(10)
-              ),
-            ),
-          )
-        )
-      ],
+    return new EditFrame(
+      // onDelete: _deleteItems,
+      // onMove: _moveItems,
+      // togglerEdit: _togglerEdit,
+      // togglerSelect: _chooseAll,
+      title: "视频列表",
+      tip: _tip,
+      onRefresh: _update,
+      child: _listView
     );
-
   }
 }

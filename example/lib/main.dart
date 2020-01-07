@@ -9,9 +9,17 @@ import './app.dart';
 void main(){
   
   // var movieModel = new MovieModel();
+  test();
   runApp(MyApp());
 }
 
+void test(){
+  var path = "/sdsd/34/fd44.jpg";
+  var s = path.split("/");
+  print("99999999999999999999999999999999999999999999999");
+  print(s);
+  print(s.last);
+}
 
 
 class MyApp extends StatelessWidget {

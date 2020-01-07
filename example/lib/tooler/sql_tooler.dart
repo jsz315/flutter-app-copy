@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class SqlTooler{
   
   String databaseName = "movie";
-  String videoTableName = "girl";
+  String videoTableName = "video";
   String captureTableName = "capture";
   // Database database;
 
@@ -29,10 +29,11 @@ class SqlTooler{
 
   void _onCreate(Database db, int version) async{
     await db.execute(
-      'CREATE TABLE $videoTableName (id INTEGER PRIMARY KEY, word TEXT, link TEXT, title TEXT, image TEXT, video TEXT)'
+      "CREATE TABLE $videoTableName (id INTEGER PRIMARY KEY, word TEXT, link TEXT, title TEXT, image TEXT, video TEXT, tag TEXT, time TIMESTAMP default (datetime('now', 'localtime')))"
     );
+
     await db.execute(
-      'CREATE TABLE $captureTableName (id INTEGER PRIMARY KEY, image TEXT)'
+      "CREATE TABLE $captureTableName (id INTEGER PRIMARY KEY, image TEXT, tag TEXT, time TIMESTAMP default (datetime('now', 'localtime')))"
     );
     print("数据库创建成功");
   }
@@ -106,7 +107,7 @@ class SqlTooler{
     print('updated: $count');
   }
 
-  Future<void> updateTitle(id, title) async {
+  Future<void> updateVideoTitle(id, title) async {
     var database = await db;
      int count = await database.rawUpdate(
         'UPDATE $videoTableName SET title = ? WHERE id = ?',
@@ -115,7 +116,7 @@ class SqlTooler{
     print('updated: $count');
   }
 
-  Future<void> updateImage(id, image) async {
+  Future<void> updatePoster(id, image) async {
     var database = await db;
      int count = await database.rawUpdate(
         'UPDATE $videoTableName SET image = ? WHERE id = ?',
@@ -129,6 +130,15 @@ class SqlTooler{
      int count = await database.rawUpdate(
         'UPDATE $videoTableName SET video = ? WHERE id = ?',
         [video, id]
+      );
+    print('updated: $count');
+  }
+
+  Future<void> updateTag(id, tag) async {
+    var database = await db;
+     int count = await database.rawUpdate(
+        'UPDATE $videoTableName SET tag = ? WHERE id = ?',
+        [tag, id]
       );
     print('updated: $count');
   }
@@ -161,6 +171,12 @@ class SqlTooler{
     print('count: $count');
   }
 
+  Future<void> deleteCapture(id) async{
+    var database = await db;
+    var count = await database.rawDelete('DELETE FROM $captureTableName WHERE id = ?', [id]);
+    print('count: $count');
+  }
+
   Future<List<Map>> movies() async{
     var database = await db;
     List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName');
@@ -168,7 +184,7 @@ class SqlTooler{
     return list;
   }
 
-  Future<void> save(image) async{
+  Future<void> saveCapture(image) async{
     var database = await db;
     await database.transaction((txn) async {
       // var sql = 'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")';
@@ -192,11 +208,19 @@ class SqlTooler{
     }
   }
 
-  Future<void> moveVideo(id, path) async{
+  // Future<void> moveVideo(id, path) async{
+  //   var database = await db;
+  //   await database.rawUpdate(
+  //       'UPDATE $videoTableName SET video = ? WHERE id = ?',
+  //       [path, id]
+  //   );
+  // }
+
+  Future<void> moveCapture(id, tag) async{
     var database = await db;
     await database.rawUpdate(
-        'UPDATE $videoTableName SET video = ? WHERE id = ?',
-        [path, id]
+        'UPDATE $captureTableName SET tag = ? WHERE id = ?',
+        [tag, id]
     );
   }
 

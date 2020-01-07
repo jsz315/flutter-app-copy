@@ -66,7 +66,7 @@ class _WebPageState extends State<WebPage> {
         _tips.add("获取标题成功");
       });
       // _movie["title"] = res;
-      Core.instance.sqlTooler.updateTitle(_movie["id"], res);
+      Core.instance.sqlTooler.updateVideoTitle(_movie["id"], res);
     });
   }
 

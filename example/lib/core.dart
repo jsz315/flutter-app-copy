@@ -1,3 +1,5 @@
+import 'package:copyapp_example/tooler/event_tooler.dart';
+
 import './tooler/channel_tooler.dart';
 import './tooler/download_tooler.dart';
 import './tooler/sql_tooler.dart';
@@ -14,6 +16,7 @@ class Core {
   SqlTooler sqlTooler;
   DownloadTooler downloadTooler;
   ChannelTooler channelTooler;
+  EventTooler eventTooler;
 
   // 私有构造函数
   Core._internal() {
@@ -21,14 +24,16 @@ class Core {
   }
 
   void init() async {
+    channelTooler = new ChannelTooler();
+    channelTooler.init();
+
     sqlTooler = new SqlTooler();
     await sqlTooler.init();
 
     downloadTooler = new DownloadTooler();
     downloadTooler.init();
 
-    channelTooler = new ChannelTooler();
-    channelTooler.init();
+    eventTooler = new EventTooler();
   }
 
   // 静态、同步、私有访问点

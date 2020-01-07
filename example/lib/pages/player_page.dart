@@ -28,7 +28,7 @@ class _PlayerPageState extends State<PlayerPage> {
     super.initState();
     _movie = widget.movie;
     print(_movie);
-    _path = _movie["video"];
+    _path = Core.instance.downloadTooler.getVideoPath(_movie);
     print("initState");
     _controller = VideoPlayerController.file(
         File(_path),

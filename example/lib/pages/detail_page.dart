@@ -1,3 +1,7 @@
+import 'package:copyapp_example/components/edit_bar.dart';
+import 'package:copyapp_example/components/edit_frame.dart';
+import 'package:copyapp_example/components/edit_menu.dart';
+
 import './player_page.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -26,19 +30,20 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
   var _copyData = "暂无";
 
   TextEditingController textEditingController = new TextEditingController();
-
+  
   @override
   bool get wantKeepAlive => true;
 
   void initState(){
     super.initState();
-    _getRunning();
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    
+    _getRunning();
     Core.instance.channelTooler.listen(this);
   }
 
@@ -110,10 +115,20 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     );
   }
 
+  void _togglerSelect(s){
+    print(s);
+  }
+
+  void _togglerEdit(s){
+    print(s);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     print("build call");
+    // var editBar = EditBar(togglerEdit: _togglerEdit, togglerSelect: _togglerSelect, title: "测试",);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -178,7 +193,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
             ),
             Container(
               child: Text(_copyData, style: TextStyle(color: Colors.blue),),
-            )
+            ),
+            // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )
       ),

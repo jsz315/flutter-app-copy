@@ -54,6 +54,8 @@ class _AppState extends State<App> {
         color: Colors.black,
         child: TabBar(
           controller: _controller,
+          indicatorColor: Colors.amber,
+          labelPadding: EdgeInsets.all(0),
           tabs: <Widget>[
             Tab(text: "主页", icon: Icon(Icons.home),),
             Tab(text: "配置", icon: Icon(Icons.color_lens),),
