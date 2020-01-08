@@ -222,8 +222,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         ),
       ),
       Container(
-        width: 50,
-        height: 64,
+        width: 60,
+        height: 68,
         margin: EdgeInsets.only(left: 20),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(4),

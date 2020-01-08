@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../core.dart';
 import 'package:flutter/material.dart';
@@ -61,23 +62,30 @@ class _ViewerPageState extends State<ViewerPage> {
       body: RepaintBoundary(
         key: _imgKey,
         child: Center(
-          child: ExtendedImage.file(
-            File(_path),
-            fit:BoxFit.cover,
-            mode: ExtendedImageMode.gesture,
-            initGestureConfigHandler: (state){
-              return GestureConfig(
-                  minScale: 0.9,
-                  animationMinScale: 0.7,
-                  maxScale: 3.0,
-                  animationMaxScale: 3.5,
-                  speed: 1.0,
-                  inertialSpeed: 100.0,
-                  initialScale: 1.0,
-                  inPageView: true
-              );
-            },
-          ),
+          child: Container(
+            width: ScreenUtil().setWidth(720),
+            height: ScreenUtil().setWidth(1080),
+            decoration: BoxDecoration(
+              border: Border.all(),
+            ),
+            child: ExtendedImage.file(
+              File(_path),
+              fit:BoxFit.cover,
+              mode: ExtendedImageMode.gesture,
+              initGestureConfigHandler: (state){
+                return GestureConfig(
+                    minScale: 0.9,
+                    animationMinScale: 0.7,
+                    maxScale: 3.0,
+                    animationMaxScale: 3.5,
+                    speed: 1.0,
+                    inertialSpeed: 100.0,
+                    initialScale: 1.0,
+                    inPageView: true
+                );
+              },
+            ),
+        ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -98,8 +99,17 @@ class _PlayerPageState extends State<PlayerPage> {
           ),
           Positioned(
               left: 20,
-              bottom: 40,
-              child: FlatButton.icon(onPressed: (){_capture();}, icon: Icon(Icons.movie), label: Text("截图"))
+              bottom: 20,
+              child: Container(
+                width: ScreenUtil().setWidth(200),
+                height: ScreenUtil().setWidth(90),
+                decoration: BoxDecoration(
+                  color: Colors.amberAccent,
+                  borderRadius: BorderRadius.circular(8)
+                ),
+                child: FlatButton.icon(onPressed: (){_capture();}, icon: Icon(Icons.movie), label: Text("截图")),
+              )
+
           )
         ],
       )

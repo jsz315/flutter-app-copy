@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:copyapp_example/components/check_box.dart';
-import 'package:copyapp_example/components/edit_frame.dart';
-import 'package:copyapp_example/pages/viewer_page.dart';
-import 'package:copyapp_example/tooler/event_tooler.dart';
+import '../components/check_box.dart';
+import '../components/edit_frame.dart';
+import '../pages/viewer_page.dart';
+import '../tooler/event_tooler.dart';
 import 'package:extended_image/extended_image.dart';
 
 import '../core.dart';
@@ -38,7 +38,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     _update();
 
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
-      print("--EditEvent--000000");
+      print("--EditEvent--");
       if(e.tip == _tip){
         setState(() {
           _isEdit = e.edit;
@@ -111,6 +111,17 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
               child: Image.file(
                 File(Core.instance.downloadTooler.getCapturePath(item)),
                 fit: BoxFit.cover,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black
+//                boxShadow: [
+//                  BoxShadow(
+//                      color: Colors.black26,
+//                      offset: Offset(2.0, 2.0),
+//                      blurRadius: 7.0,
+//                      spreadRadius: 1.0
+//                  )
+//                ]
               ),
             ),
           ];

@@ -1,7 +1,11 @@
-import 'package:copyapp_example/components/check_box.dart';
-import 'package:copyapp_example/components/title_bar.dart';
-import 'package:copyapp_example/components/edit_frame.dart';
-import 'package:copyapp_example/components/edit_menu.dart';
+import 'package:copyapp_example/components/edit_image.dart';
+import 'package:copyapp_example/pages/image_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../components/check_box.dart';
+import '../components/title_bar.dart';
+import '../components/edit_frame.dart';
+import '../components/edit_menu.dart';
 
 import './player_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -129,6 +133,18 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     Core.instance.reset();
   }
 
+  void _chooseImage(n){
+    print(n);
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => ImagePage(
+
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -142,21 +158,26 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
         centerTitle: true,
       ),
       body: Container(
-        padding: EdgeInsets.all(30),
         child: Column(
           children: <Widget>[
-            Row(children: <Widget>[
-              Expanded(
-                child: Text("开启服务"),
-              ),
-              CupertinoSwitch(
-                value: _running,
-                onChanged: _setRunning,
-              )
-            ],),
+            Container(
+              margin: EdgeInsets.all(30),
+              child: Row(children: <Widget>[
+                Expanded(
+                  child: Text("开启服务"),
+                  flex: 1,
+                ),
+                CupertinoSwitch(
+                  value: _running,
+                  onChanged: _setRunning,
+                )
+              ],),
+            ),
             Container(
               padding: EdgeInsets.only(top: 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   MaterialButton(
                     color: Colors.amber,
@@ -177,23 +198,29 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
                 ],
               ),
             ),
-            MaterialButton(
-              color: Colors.amber,
-              child: new Text('播放视频'),
-              onPressed: (){_playVideo();},
-            ),
-            MaterialButton(
-              color: Colors.amber,
-              child: new Text('重置系统'),
-              onPressed: (){_resetSystem();},
+            Container(
+              margin: EdgeInsets.only(top: 30),
+              width: ScreenUtil().setWidth(640),
+              height: ScreenUtil().setWidth(80),
+              child: MaterialButton(
+                color: Colors.amber,
+                child: new Text('重置系统'),
+                onPressed: (){_resetSystem();},
+              ),
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.only(top: 20),
               child: Text("复制的文字", style: TextStyle(color: Colors.black26),),
             ),
             Container(
               child: Text(_copyData, style: TextStyle(color: Colors.blue),),
+              padding: EdgeInsets.all(30),
             ),
+            Transform.scale(
+              child: new EditImage(),
+              scale: 0.9,
+            )
+            
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )
