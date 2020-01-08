@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   var _movies = [];
   var _isEdit = false;
-  var _selectedList = [];
+  List _selectedList = [];
   var _tip = "home";
 
   @override
@@ -150,11 +150,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   // }
 
   Future<void> _deleteItems() async{
-    for(var i = 0; i < _selectedList.length; i++){
-      if(_selectedList[i]){
+    var selects = _selectedList.sublist(0);
+    print("selects before");
+    print(selects);
+    print(_selectedList);
+
+    for(var i = 0; i < selects.length; i++){
+      if(selects[i]){
         await Core.instance.downloadTooler.deleteVideoItem(_movies[i]);
       }
     }
+    print("selects after");
+    print(selects);
+    print(_selectedList);
     await _update();
   }
 
@@ -162,11 +170,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     print("创建目录 $tag");
      Core.instance.downloadTooler.createVideoTagDir(tag);
      Core.instance.downloadTooler.createPosterTagDir(tag);
-     for(var i = 0; i < _selectedList.length; i++){
-       if(_selectedList[i]){
+
+     var selects = _selectedList.sublist(0);
+    print("selects before");
+     print(selects);
+    print(_selectedList);
+     for(var i = 0; i < selects.length; i++){
+       if(selects[i]){
          await Core.instance.downloadTooler.moveVideoItem(_movies[i], tag);
        }
      }
+    print("selects after");
+    print(selects);
+    print(_selectedList);
      await _update();
   }
 

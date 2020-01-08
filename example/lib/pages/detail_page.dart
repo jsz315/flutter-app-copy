@@ -182,30 +182,10 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               child: new Text('播放视频'),
               onPressed: (){_playVideo();},
             ),
-            CheckBox(
-              value: _isCheck,
-              onChanged: (c){
-                print(c);
-                setState(() {
-                  _isCheck = c;
-                });
-              },
-            ),
             MaterialButton(
               color: Colors.amber,
               child: new Text('重置系统'),
               onPressed: (){_resetSystem();},
-            ),
-            TextField(
-              controller: textEditingController,
-                decoration: InputDecoration(
-                  prefixIcon:Icon(Icons.folder),
-                  labelText: "目录名称",
-                  hintText: "请输入视频目录名称",
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
             ),
             Container(
               padding: EdgeInsets.all(20),

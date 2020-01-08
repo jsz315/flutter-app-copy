@@ -23,7 +23,7 @@ class ImagePage extends StatefulWidget {
 class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixin {
 
   var _isEdit = false;
-  var _selectedList = [];
+  List _selectedList = [];
   var _tip = "image";
 
   @override
@@ -141,8 +141,9 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
   }
 
   Future<void> _deleteItems() async{
-    for(var i = 0; i < _selectedList.length; i++){
-      if(_selectedList[i]){
+    var selects = _selectedList.sublist(0);
+    for(var i = 0; i < selects.length; i++){
+      if(selects[i]){
         await Core.instance.downloadTooler.deleteCapture(_datas[i]);
       }
     }
@@ -152,8 +153,9 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
   Future<void> _moveItems(tag) async{
     print("创建目录 $tag");
      Core.instance.downloadTooler.createCaptureTagDir(tag);
-     for(var i = 0; i < _selectedList.length; i++){
-       if(_selectedList[i]){
+     var selects = _selectedList.sublist(0);
+     for(var i = 0; i < selects.length; i++){
+       if(selects[i] == true){
          await Core.instance.downloadTooler.moveCapture(_datas[i], tag);
        }
      }

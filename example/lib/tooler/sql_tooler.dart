@@ -229,6 +229,7 @@ class SqlTooler{
         'UPDATE $captureTableName SET tag = ? WHERE id = ?',
         [tag, id]
     );
+    print("更新记录成功");
   }
 
 }

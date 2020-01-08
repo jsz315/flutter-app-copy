@@ -117,7 +117,6 @@ class DownloadTooler{
   Future<void> moveCapture(item, tag) async{
     var path = getCapturePath(item);
     await _moveFile(path, "$dir/capture/$tag/${item['image']}");
-
     await Core.instance.sqlTooler.moveCapture(item["id"], tag);
   }
 

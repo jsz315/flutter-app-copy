@@ -91,19 +91,21 @@ class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin
       context: context,
       builder: (context){
         return AlertDialog(
-          content: Column(children: <Widget>[
-            TextField(
-                  controller: _textEditingController,
-                    decoration: InputDecoration(
-                      prefixIcon:Icon(Icons.folder),
-                      labelText: "目录名称",
-                      hintText: "请输入视频目录名称",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
+          content: Column(
+            children: <Widget>[
+              TextField(
+                controller: _textEditingController,
+                  decoration: InputDecoration(
+                    prefixIcon:Icon(Icons.folder),
+                    labelText: "目录名称",
+                    hintText: "请输入视频目录名称",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
                     ),
-                ),
-          ],),
+                  ),
+              ),
+            ],
+          ),
           title: Center(
             child: Text(
             '移动视频',
