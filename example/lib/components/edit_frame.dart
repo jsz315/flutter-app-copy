@@ -1,4 +1,4 @@
-import 'package:copyapp_example/components/edit_bar.dart';
+import 'package:copyapp_example/components/title_bar.dart';
 import 'package:copyapp_example/components/edit_menu.dart';
 import 'package:flutter/material.dart';
 
@@ -32,14 +32,14 @@ class EditFrame extends StatefulWidget {
 class _EditFrameState extends State<EditFrame> {
 
   EditMenu _editMenu;
-  EditBar _editBar;
+  TitleBar _titleBar;
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _editMenu = new EditMenu(tip: widget.tip,);
-    _editBar = new EditBar(tip: widget.tip, title: widget.title,);
+    _titleBar = new TitleBar(tip: widget.tip, title: widget.title,);
   }
 
   @override
@@ -50,7 +50,7 @@ class _EditFrameState extends State<EditFrame> {
           body: Container(
             child: Column(
               children: <Widget>[
-                _editBar,
+                _titleBar,
                 Expanded(
                   flex: 1,
                   child: RefreshIndicator(child: widget.child, onRefresh: widget.onRefresh)

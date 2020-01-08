@@ -43,6 +43,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
         setState(() {
           _isEdit = e.edit;
         });
+        _chooseAll(false);
       }
     });
 
@@ -86,6 +87,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
   void _chooseOne(c, id){
     setState(() {
       _selectedList[id] = c;
+      print(_selectedList);
     });
   }
 

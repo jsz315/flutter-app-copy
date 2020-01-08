@@ -36,6 +36,10 @@ class Core {
     eventTooler = new EventTooler();
   }
 
+  void reset(){
+    sqlTooler.reset();
+  }
+
   // 静态、同步、私有访问点
   static Core _getInstance() {
     if (_instance == null) {

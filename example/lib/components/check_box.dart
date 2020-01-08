@@ -29,14 +29,14 @@ class _CheckBoxState extends State<CheckBox> {
     var view;
     if(widget.value){
       view = Icon(
-        Icons.check_box_outline_blank,
+        Icons.check_box,
         color: Colors.amber,
         size: 24,
       );
     }
     else{
       view = Icon(
-        Icons.check_box,
+        Icons.check_box_outline_blank,
         color: Colors.amber,
         size: 24,
       );

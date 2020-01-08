@@ -37,7 +37,14 @@ class SqlTooler{
     );
     print("数据库创建成功");
   }
-
+  
+  Future<void> reset()async{
+    var databasesPath = await getDatabasesPath();
+    String path = databasesPath + '/$databaseName.db';
+    await deleteDatabase(path);
+    _db = null;
+    _initDatabase();
+  }
 
   Future<void> init() async{
     // var databasesPath = await getDatabasesPath();

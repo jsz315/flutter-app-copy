@@ -20,34 +20,69 @@ class EditMenu extends StatefulWidget {
   _EditMenuState createState() => _EditMenuState();
 }
 
-class _EditMenuState extends State<EditMenu> {
+class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin {
 
   var _isEdit = false;
 
   TextEditingController _textEditingController = new TextEditingController();
+  Animation<double> animation;
+  AnimationController controller;
 
   _deleteItems(){
     // widget.onDelete();
-    Core.instance.eventTooler.eventBus.fire(DeleteEvent(widget.tip));
+    Core.instance.eventTooler.eventBus.fire(new DeleteEvent(widget.tip));
+    Core.instance.eventTooler.eventBus.fire(new EditEvent(widget.tip, false));
   }
 
   _moveItems(tag){
-    Core.instance.eventTooler.eventBus.fire(MoveEvent(widget.tip, tag));
+    Core.instance.eventTooler.eventBus.fire(new MoveEvent(widget.tip, tag));
+    Core.instance.eventTooler.eventBus.fire(new EditEvent(widget.tip, false));
   }
 
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    controller = new AnimationController(duration: const Duration(milliseconds: 240), vsync: this);
+    final CurvedAnimation curve = CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeIn
+        );
+    animation = new Tween(begin: -60.0, end: 10.0).animate(curve)
+      ..addListener((){
+        print(animation.value);
+        setState(() {
+          // the state that has changed here is the animation object’s value
+        });
+      });
+    // controller.forward();
+    print("animation.value");
+    print(animation.value);
+
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
+      print("--EditMenu EditEvent--");
       setState(() {
         _isEdit = e.edit;
+        if(!_isEdit){
+          controller.reverse();
+        }
+        else{
+          controller.forward();
+        }
+        print("动画开始");
       });
+      
     });
   }
 
   @override
   void dispose(){
     super.dispose();
+    controller.dispose();
   }
 
   _popInput(){
@@ -97,23 +132,29 @@ class _EditMenuState extends State<EditMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: 80,
-      bottom: _isEdit ? 16 : -60,
-      child: Center(
-        child: Container(
-          child: Row(
-            children: <Widget>[
-              FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever), label: Text("删除")),
-              FlatButton.icon(onPressed: (){_popInput();}, icon: Icon(Icons.move_to_inbox), label: Text("移动"))
-            ],
-          ),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(180, 255, 240, 0),
-            borderRadius: BorderRadius.circular(10)
-          ),
-        ),
-      )
+    print("build menu");
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext ctx, Widget child){
+        return Positioned(
+          left: 80,
+          bottom: animation.value,
+          child: Center(
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever), label: Text("删除")),
+                  FlatButton.icon(onPressed: (){_popInput();}, icon: Icon(Icons.move_to_inbox), label: Text("移动"))
+                ],
+              ),
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(180, 255, 240, 0),
+                borderRadius: BorderRadius.circular(10)
+              ),
+            )
+          )
+        );
+      }
     );
   }
 }

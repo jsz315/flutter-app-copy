@@ -1,4 +1,5 @@
-import 'package:copyapp_example/components/edit_bar.dart';
+import 'package:copyapp_example/components/check_box.dart';
+import 'package:copyapp_example/components/title_bar.dart';
 import 'package:copyapp_example/components/edit_frame.dart';
 import 'package:copyapp_example/components/edit_menu.dart';
 
@@ -28,6 +29,7 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   bool _running = false;
   var _copyData = "暂无";
+  var _isCheck = false;
 
   TextEditingController textEditingController = new TextEditingController();
   
@@ -123,11 +125,15 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     print(s);
   }
 
+  void _resetSystem(){
+    Core.instance.reset();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     print("build call");
-    // var editBar = EditBar(togglerEdit: _togglerEdit, togglerSelect: _togglerSelect, title: "测试",);
+    // var TitleBar = TitleBar(togglerEdit: _togglerEdit, togglerSelect: _togglerSelect, title: "测试",);
 
     return Scaffold(
       appBar: AppBar(
@@ -175,6 +181,20 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               color: Colors.amber,
               child: new Text('播放视频'),
               onPressed: (){_playVideo();},
+            ),
+            CheckBox(
+              value: _isCheck,
+              onChanged: (c){
+                print(c);
+                setState(() {
+                  _isCheck = c;
+                });
+              },
+            ),
+            MaterialButton(
+              color: Colors.amber,
+              child: new Text('重置系统'),
+              onPressed: (){_resetSystem();},
             ),
             TextField(
               controller: textEditingController,

@@ -65,15 +65,23 @@ class DownloadTooler{
 
   Future<void> _deleteFile(path) async{
     // var path = item["video"];
+    print(path);
     if(path != null){
-      var file = new File(path);
-      if(file.existsSync()){
-        await file.delete();
-        print("【删除成功】" + path);
+      try{
+        var file = new File(path);
+        if(file.existsSync()){
+          await file.delete();
+          print("【删除成功】" + path);
+        }
+        else{
+          print("【文件不存在】" + path);
+        }
       }
-      else{
-        print("【文件不存在】" + path);
+      catch (e){
+        print("文件异常");
+        print(e);
       }
+
     }
     else{
       print("【文件不存在】");

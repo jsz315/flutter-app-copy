@@ -81,11 +81,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     _update();
 
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
-      print("--EditEvent--");
+      print("--HomePage EditEvent--");
       if(e.tip == _tip){
         setState(() {
           _isEdit = e.edit;
         });
+        _chooseAll(false);
       }
     });
 
@@ -219,10 +220,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     ];
 
     if(_isEdit){
-      list.insert(0, CheckBox(
-        value: _selectedList[id],
-        onChanged: (c){_chooseOne(c, id);},
-      ));
+      list.insert(0, Padding(
+        padding: EdgeInsets.only(left: 10,right: 10),
+        child: CheckBox(
+          value: _selectedList[id],
+          onChanged: (c){_chooseOne(c, id);},
+        )),
+      );
     }
 
     return GestureDetector(
