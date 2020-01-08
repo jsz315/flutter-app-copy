@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import './pages/image_page.dart';
@@ -39,6 +40,8 @@ class _AppState extends State<App> {
   
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+    
     return Scaffold(      
       body: SafeArea(
         child: TabBarView(

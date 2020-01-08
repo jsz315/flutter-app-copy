@@ -1,6 +1,7 @@
 import 'package:copyapp_example/core.dart';
 import 'package:copyapp_example/tooler/event_tooler.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class EditMenu extends StatefulWidget {
@@ -137,10 +138,11 @@ class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin
       animation: animation,
       builder: (BuildContext ctx, Widget child){
         return Positioned(
-          left: 80,
+          left: ScreenUtil().setWidth(750 / 2 - 400 / 2),
           bottom: animation.value,
           child: Center(
             child: Container(
+              width: ScreenUtil().setWidth(400),
               child: Row(
                 children: <Widget>[
                   FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever), label: Text("删除")),
