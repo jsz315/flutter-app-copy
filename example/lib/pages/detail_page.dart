@@ -1,3 +1,4 @@
+import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/components/edit_image.dart';
 import 'package:copyapp_example/pages/image_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -106,8 +107,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   void _update() async{
     List<Map> movies = await Core.instance.sqlTooler.movies();
-    var movieModel = Provider.of<MovieModel>(context);
-    movieModel.update(movies);
+    // var movieModel = Provider.of<MovieModel>(context);
+    // movieModel.update(movies);
   }
 
   void _playVideo(){
@@ -157,7 +158,7 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
         title: Text("调试配置"),
         centerTitle: true,
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
@@ -219,8 +220,11 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
             Transform.scale(
               child: new EditImage(),
               scale: 0.9,
-            )
-            
+            ),
+            CustomPaint(
+              size: Size(ScreenUtil().setWidth(640), ScreenUtil().setWidth(400)),
+              painter: CanvasView(),
+            ),
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )

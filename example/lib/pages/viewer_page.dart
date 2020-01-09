@@ -22,7 +22,7 @@ class ViewerPage extends StatefulWidget {
 
 class _ViewerPageState extends State<ViewerPage> {
 
-  GlobalKey _imgKey = GlobalKey();
+  final GlobalKey _imgKey = GlobalKey();
   double _imgWidth = 0;
   double _imgHeight = 0;
   var _path;
@@ -49,7 +49,6 @@ class _ViewerPageState extends State<ViewerPage> {
       Uint8List pngBytes = byteData.buffer.asUint8List();
       await Core.instance.downloadTooler.saveImage(pngBytes);
       ToastTooler.toast(context, msg: "保存图片成功");
-      
     } catch (e) {
       print(e);
       ToastTooler.toast(context, msg: "保存图片失败");

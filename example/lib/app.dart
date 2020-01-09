@@ -15,18 +15,36 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  TabController _controller;
+//  TabController _controller;
+  var _index = 0;
+  var _list = [
+    new HomePage(),
+    new DetailPage(),
+    new ImagePage()
+  ];
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+//    setState(() {
+//      _list = [
+//        new HomePage(),
+//        new DetailPage(),
+//        new ImagePage()
+//      ];
+//    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _controller = new TabController(
-      vsync: ScrollableState(),
-      length: 3
-    );
-    _controller.addListener((){
-      print(_controller.index);
-    });
+//    _controller = new TabController(
+//      vsync: ScrollableState(),
+//      length: 3
+//    );
+//    _controller.addListener((){
+//      print(_controller.index);
+//    });
 
     // DownloadTooler.init();
 
@@ -37,35 +55,45 @@ class _AppState extends State<App> {
     ]);
     
   }
+
+  void _changeIndex(n){
+    setState(() {
+      _index = n;
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+
+    print("app build *************");
     
     return Scaffold(      
       body: SafeArea(
-        child: TabBarView(
-          controller: _controller,
-          children: <Widget>[
-            new HomePage(),
-            new DetailPage(),
-            new ImagePage()
-          ],
-        ),
+        child: IndexedStack(
+          index: _index,
+          children: _list,
+        )
+//        child: _list[_index],
       ) ,
-      bottomNavigationBar: Material(
-        color: Colors.black,
-        child: TabBar(
-          controller: _controller,
-          indicatorColor: Colors.amber,
-          labelPadding: EdgeInsets.all(0),
-          tabs: <Widget>[
-            Tab(text: "主页", icon: Icon(Icons.home),),
-            Tab(text: "配置", icon: Icon(Icons.color_lens),),
-            Tab(text: "关于", icon: Icon(Icons.group),),
-          ],
-        ),
-      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index,
+        onTap: (n){_changeIndex(n);},
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("主页")
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.color_lens),
+            title: Text("调试")
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.panorama),
+            title: Text("截图")
+          ),
+        ],
+      )
       
     );
   }

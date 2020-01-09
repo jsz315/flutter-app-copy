@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../tooler/string_tooler.dart';
 import '../tooler/toast_tooler.dart';
 
@@ -27,21 +29,16 @@ class _WebPageState extends State<WebPage> {
   String _title = "";
   var _movie;
 
+  @override
   void initState(){
     super.initState();
     _movie = widget.movie;
     print("initState current movie");
     print(_movie);
 
-    var permission =  PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-    print("permission status is " + permission.toString());
-    PermissionHandler().requestPermissions(<PermissionGroup>[
-      PermissionGroup.storage, // 在这里添加需要的权限
-    ]);
   }
 
   void _callJavascript(){
-    // var js = 'document.querySelector("#logo").style.backgroundColor="#440099";';
     var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
       print(res);
@@ -49,7 +46,6 @@ class _WebPageState extends State<WebPage> {
       var aim = str1.replaceAll(new RegExp(r'\\'), "");
       aim = aim.substring(1, aim.length -1 );
       dynamic item = json.decode(aim);
-      // DownloadTooler.start(item["poster"], item["src"]);
       await Core.instance.downloadTooler.start(_movie["id"], item["poster"], item["src"]);
       ToastTooler.toast(context, msg: "下载成功", position: ToastPostion.bottom);
       setState(() {
@@ -65,7 +61,6 @@ class _WebPageState extends State<WebPage> {
         _title = res;
         _tips.add("获取标题成功");
       });
-      // _movie["title"] = res;
       Core.instance.sqlTooler.updateVideoTitle(_movie["id"], res);
     });
   }
@@ -91,8 +86,6 @@ class _WebPageState extends State<WebPage> {
 
   @override
   Widget build(BuildContext context) {
-    // var movieModel = Provider.of<MovieModel>(context);
-    // _movie = movieModel.movies[movieModel.index];
     print("build current movie");
     print(_movie);
 
@@ -114,18 +107,15 @@ class _WebPageState extends State<WebPage> {
               _setTitle();
             },
             navigationDelegate: (NavigationRequest navigationRequest){
-              // if(navigationRequest.url.startsWith("http://")){
-              //   return NavigationDecision.prevent;
-              // }
-              print(navigationRequest.url);
+              print("内部跳转：${navigationRequest.url}");
               return NavigationDecision.navigate;
             },
           ),
           Positioned(
             left: 20,
             top: 20,
-            width: MediaQuery.of(context).size.width - 40,
-            height: 200,
+            width: ScreenUtil().setWidth(500),
+            height: ScreenUtil().setWidth(300),
             child: Container(
               child: listView,
             ),

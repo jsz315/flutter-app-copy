@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:copyapp_example/components/check_box.dart';
 import 'package:copyapp_example/components/edit_frame.dart';
 import 'package:copyapp_example/tooler/event_tooler.dart';
+import 'package:copyapp_example/tooler/toast_tooler.dart';
 import 'package:provider/provider.dart';
 
 import './player_page.dart';
@@ -29,10 +30,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   bool get wantKeepAlive => true;
 
   _itemClick(id) {
-    var movieModel = Provider.of<MovieModel>(context);
-//    movieModel.changeTitle();
-    movieModel.choose(id);
+    // var movieModel = Provider.of<MovieModel>(context);
+    // movieModel.choose(id);
     var movie = _movies[id];
+    print("goto web ${movie['link']}");
     Navigator.push(
         context,
         new MaterialPageRoute(
@@ -115,8 +116,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   Future<void> _update() async{
     List<Map> movies = await Core.instance.sqlTooler.movies();
-    var movieModel = Provider.of<MovieModel>(context);
-    movieModel.update(movies);
+    // var movieModel = Provider.of<MovieModel>(context);
+    // movieModel.update(movies);
     var slist = [];
     movies.forEach((val){
       slist.add(false);
@@ -164,6 +165,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     print(selects);
     print(_selectedList);
     await _update();
+
+    ToastTooler.toast(context, msg: "操作成功");
+    // Scaffold.of(context).showSnackBar(SnackBar(content: Center(child: Text("操作成功")), duration: Duration(seconds: 2),));
   }
 
   Future<void> _moveItems(tag) async{
@@ -184,6 +188,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     print(selects);
     print(_selectedList);
      await _update();
+     ToastTooler.toast(context, msg: "操作成功");
   }
 
   Widget _getItem(id){
@@ -268,6 +273,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    print("home page build ************");
+
     ListView _listView = ListView.builder(
         itemCount: _movies.length,
         itemBuilder: (BuildContext context, int id) {

@@ -2,10 +2,9 @@ import 'package:event_bus/event_bus.dart';
 
 class EventTooler{
 
-  EventBus eventBus = EventBus(sync: true);
+  final EventBus eventBus = EventBus(sync: true);
 
   EventTooler();
-  
   
 }
 

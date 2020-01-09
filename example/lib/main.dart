@@ -14,11 +14,7 @@ void main(){
 }
 
 void test(){
-  var path = "/sdsd/34/fd44.jpg";
-  var s = path.split("/");
-  print("99999999999999999999999999999999999999999999999");
-  print(s);
-  print(s.last);
+  
 }
 
 
@@ -27,24 +23,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Core.instance.init();
+    print("Core instance init ==========");
     
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: Provider<String>.value(value: "ok", child: new App(),)
-      // home: ChangeNotifierProvider<MovieModel>(
-      //   builder: (context)=>MovieModel(),
-      //   child: new App(),
+      home: App(),
+      // home: MultiProvider(
+      //   providers: [
+      //     Provider<MovieModel>.value(value: new MovieModel(),)
+      //   ],
+      //   child: App(),
       // )
-      home: MultiProvider(
-        providers: [
-          Provider<MovieModel>.value(value: new MovieModel(),)
-        ],
-        child: App(),
-      )
     );
   }
 }

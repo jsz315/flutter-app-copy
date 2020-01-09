@@ -159,6 +159,8 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
       }
     }
     await _update();
+    ToastTooler.toast(context, msg: "操作成功");
+    // Scaffold.of(context).showSnackBar(SnackBar(content: Center(child: Text("操作成功")), duration: Duration(seconds: 2),));
   }
 
   Future<void> _moveItems(tag) async{
@@ -171,6 +173,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
        }
      }
      await _update();
+     ToastTooler.toast(context, msg: "操作成功");
   }
 
 

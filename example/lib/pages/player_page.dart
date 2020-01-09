@@ -19,7 +19,7 @@ class PlayerPage extends StatefulWidget {
 
 class _PlayerPageState extends State<PlayerPage> {
   VideoPlayerController _controller;
-  GlobalKey _picKey = GlobalKey();
+//  final GlobalKey _picKey = GlobalKey();
   String _path = '';
 
   var _movie;
@@ -42,11 +42,6 @@ class _PlayerPageState extends State<PlayerPage> {
 
   void _capture() async{
     try {
-//      RenderRepaintBoundary boundary = _picKey.currentContext.findRenderObject();
-//      var image = await boundary.toImage(pixelRatio: 2.0);
-//      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-//      Uint8List pngBytes = byteData.buffer.asUint8List();
-
       Uint8List pngBytes = await VideoThumbnail.thumbnailData(
         video: _path, // Path of that video
         imageFormat: ImageFormat.PNG,
@@ -72,7 +67,6 @@ class _PlayerPageState extends State<PlayerPage> {
         children: <Widget>[
           Scaffold(
             body: RepaintBoundary(
-              key: _picKey,
               child: Center(
                 child: _controller.value.initialized
                     ? AspectRatio(
