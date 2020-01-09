@@ -1,12 +1,18 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/components/edit_image.dart';
 import 'package:copyapp_example/pages/image_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../components/check_box.dart';
 import '../components/title_bar.dart';
 import '../components/edit_frame.dart';
 import '../components/edit_menu.dart';
+
+import 'dart:ui' as UI; 
 
 import './player_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +41,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
   bool _running = false;
   var _copyData = "暂无";
   var _isCheck = false;
+  UI.Image _image;
+  bool _isImageloaded = false;
 
   TextEditingController textEditingController = new TextEditingController();
   
@@ -43,6 +51,15 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   void initState(){
     super.initState();
+    _init();
+  }
+
+  void _init() async {
+    var img = await loadUiImage("assets/images/wgj.jpg");
+    setState(() {
+      _image = img;
+      _isImageloaded = true;
+    });
   }
 
   @override
@@ -146,6 +163,15 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     );
   }
 
+  Future<UI.Image> loadUiImage(String imageAssetPath) async {
+    final ByteData data = await rootBundle.load(imageAssetPath);
+    final Completer<UI.Image> completer = Completer();
+    UI.decodeImageFromList(Uint8List.view(data.buffer), (UI.Image img) {
+      return completer.complete(img);
+    });
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -221,10 +247,13 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               child: new EditImage(),
               scale: 0.9,
             ),
-            CustomPaint(
-              size: Size(ScreenUtil().setWidth(640), ScreenUtil().setWidth(400)),
-              painter: CanvasView(),
-            ),
+            _isImageloaded ?
+              CustomPaint(
+                size: Size(ScreenUtil().setWidth(750), ScreenUtil().setWidth(400)),
+                painter: CanvasView(_image),
+              )
+            :
+              Text("loading")
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )

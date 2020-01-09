@@ -45,6 +45,7 @@ class _TitleBarState extends State<TitleBar> {
   @override
   void initState(){
     super.initState();
+    print("--1 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e) {
       print("--EditMenu EditEvent--");
       setState(() {

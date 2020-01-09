@@ -14,6 +14,8 @@ class Core {
   // 静态私有成员，没有初始化
   static Core _instance;
 
+  bool isInit = false;
+
   SqlTooler sqlTooler;
   DownloadTooler downloadTooler;
   ChannelTooler channelTooler;
@@ -23,22 +25,31 @@ class Core {
 
   // 私有构造函数
   Core._internal() {
-    
+    print("私有构造函数 ===========");
   }
 
   void init() async {
-    channelTooler = new ChannelTooler();
-    channelTooler.init();
+    print("初始化 =====");
+    if(isInit){
+      print("已经初始化 =====");
+    }
+    else{
+      channelTooler = new ChannelTooler();
+      channelTooler.init();
 
-    sqlTooler = new SqlTooler();
-    await sqlTooler.init();
+      downloadTooler = new DownloadTooler();
+      downloadTooler.init();
 
-    downloadTooler = new DownloadTooler();
-    downloadTooler.init();
+      eventTooler = new EventTooler();
 
-    eventTooler = new EventTooler();
+      movieModel = new MovieModel();
 
-    movieModel = new MovieModel();
+      sqlTooler = new SqlTooler();
+      await sqlTooler.init();
+      isInit = true;
+      print("完成初始化 =====");
+    }
+    
   }
 
   void reset(){

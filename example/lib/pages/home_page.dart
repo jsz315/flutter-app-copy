@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     super.didChangeDependencies();
 
     _update();
-
+    print("--2 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
       print("--HomePage EditEvent--");
       if(e.tip == _tip){

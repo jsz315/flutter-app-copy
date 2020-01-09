@@ -36,7 +36,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     super.didChangeDependencies();
 
     _update();
-
+    print("--3 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
       print("--EditEvent--");
       if(e.tip == _tip){
