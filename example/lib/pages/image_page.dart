@@ -97,7 +97,8 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
         context,
         new MaterialPageRoute(
             builder: (context) => ViewerPage(
-                path: path
+                path: path,
+                eidt: false,
             )
         )
     );
@@ -114,14 +115,6 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
               ),
               decoration: BoxDecoration(
                 color: Colors.black
-//                boxShadow: [
-//                  BoxShadow(
-//                      color: Colors.black26,
-//                      offset: Offset(2.0, 2.0),
-//                      blurRadius: 7.0,
-//                      spreadRadius: 1.0
-//                  )
-//                ]
               ),
             ),
           ];

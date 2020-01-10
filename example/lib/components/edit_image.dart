@@ -1,20 +1,27 @@
 import 'dart:io';
 
+import 'package:copyapp_example/components/canvas_view.dart';
+import 'package:copyapp_example/model/image_rect_data.dart';
 import 'package:copyapp_example/pages/image_page.dart';
 import 'package:copyapp_example/pages/pick_page.dart';
 import 'package:copyapp_example/pages/viewer_page.dart';
+import 'package:copyapp_example/tooler/image_tooler.dart';
 import 'package:copyapp_example/tooler/toast_tooler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditImage extends StatefulWidget {
-  EditImage({Key key}) : super(key: key);
+  var onChange;
+  EditImage({Key key, this.onChange}) : super(key: key);
 
   @override
   _EditImageState createState() => _EditImageState();
 }
 
 class _EditImageState extends State<EditImage> {
+
+  List<ImageRectData> _imageRectDatas = [];
+  final GlobalKey _imgKey = GlobalKey();
 
   var _paths = [
     {
@@ -31,6 +38,59 @@ class _EditImageState extends State<EditImage> {
     },
   ];
 
+  var _dragId = 0;
+
+  void _dragStart(DragStartDetails e){
+    _dragId = getHitIndex(e.globalPosition);
+  }
+
+  int getHitIndex(Offset offset){
+    var p = offset.dx / ScreenUtil.screenWidthDp;
+    if(p < 0.33){
+      return 0;
+    }
+    else if(p < 0.66){
+      return 1;
+    }
+    else{
+      return 2;
+    }
+  }
+
+  void _dragEnd(DragEndDetails e){
+    print("_dragEnd");
+    if(e.velocity.pixelsPerSecond.dx > 600){
+      print("右边滑动");
+      if(_dragId < 2){
+        setState(() {
+          _imageRectDatas.insert(_dragId + 1, _imageRectDatas.removeAt(_dragId));
+        });
+      }
+      else{
+        print("超出范围");
+      }
+    }
+    else if(e.velocity.pixelsPerSecond.dx < -600){
+      print("左边滑动");
+      if(_dragId > 0) {
+        setState(() {
+          _imageRectDatas.insert(_dragId - 1, _imageRectDatas.removeAt(_dragId));
+        });
+      }
+      else{
+        print("超出范围");
+      }
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    for(var i = 0; i < 3; i++){
+      _imageRectDatas.add(null);
+    }
+  }
+
   void _chooseImage(n){
     print(n);
     Navigator.push(
@@ -40,78 +100,64 @@ class _EditImageState extends State<EditImage> {
 
             )
         )
-    ).then((data){
+    ).then((data) async{
       print("返回的数据");
       print(data);
       if(data != null){
         setState(() {
           _paths[n] = data;
+        });
+        widget.onChange(n, data);
+        var img = await ImageTooler.loadImage(File(data["url"]));
+        setState(() {
+          _imageRectDatas[n] = new ImageRectData(img, null, data["url"]);
         });
       }
     });
   }
 
-  void _editImage(n){
-    if(_paths[n]["type"] == "assets"){
-      ToastTooler.toast(context, msg: "先选择图片");
-      return;
-    }
-    print(n);
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => ViewerPage(
-                path: _paths[n]["url"]
-            )
-        )
-    ).then((data){
-      print("返回的数据");
-      print(data);
-      if(data != null){
-        setState(() {
-          _paths[n] = data;
-        });
-      }
-    });
+  void _editImage(LongPressEndDetails e){
+    var n = getHitIndex(e.globalPosition);
+    // if(_paths[n]["type"] == "assets"){
+    //   ToastTooler.toast(context, msg: "先选择图片");
+    //   return;
+    // }
+    // print(n);
+     Navigator.push(
+         context,
+         new MaterialPageRoute(
+             builder: (context) => ViewerPage(
+                 path: _imageRectDatas[n].path
+             )
+         )
+     ).then((data){
+       print("返回的数据");
+       print(data);
+       if(data != null){
+         setState(() {
+           _imageRectDatas[n].rect = data;
+         });
+       }
+     });
   }
 
   Widget _getImages(){
-    List<Widget> list = [];
-    for(int i = 0; i < _paths.length; i++){
-      var image;
-      var type = _paths[i]["type"];
-      var url = _paths[i]["url"];
-      if(type == "assets"){
-        image = Image.asset(
-          url,
-          fit: BoxFit.fill,
-        );
-      }
-      else{
-        image = Image.file(
-          File(url),
-          fit: BoxFit.fill,
-        );
-      }
-
-      list.add(
-        GestureDetector(
-          onTap: (){_editImage(i);},
-          child: SizedBox(
-            width: ScreenUtil().setWidth(250),
-            height: ScreenUtil().setWidth(540),
-            child: Container(
-              color: Colors.amber,
-              child: image
-            ),
-          ),
-        )
-      );
-    }
-
-    return Row(
-      children: list
-    );
+    return FittedBox(
+                child: SizedBox(
+                  child: GestureDetector(
+                    onLongPressEnd: _editImage,
+                    onHorizontalDragStart: _dragStart,
+                    onHorizontalDragEnd: _dragEnd,
+                    child: RepaintBoundary(
+                      key: _imgKey,
+                      child:  CustomPaint(
+                        size: Size(ScreenUtil().setWidth(1280), ScreenUtil().setWidth(720)),
+                        painter: CanvasView(_imageRectDatas),
+                      ),
+                    ),
+                  )
+                )
+              );
   }
 
   Widget _getBtns(){
@@ -137,13 +183,31 @@ class _EditImageState extends State<EditImage> {
     );
   }
 
+   void _capture() async{
+    print("开始截屏");
+    ImageTooler.capture(_imgKey, context);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
        child: Column(
          children: <Widget>[
-           _getImages(),
+           GestureDetector(
+             child: _getImages(),
+           ),
            _getBtns(),
+           Container(
+            margin: EdgeInsets.only(top: 30),
+            width: ScreenUtil().setWidth(640),
+            height: ScreenUtil().setWidth(80),
+            child: MaterialButton(
+              color: Colors.amber,
+              child: new Text('生成图片'),
+              onPressed: (){_capture();}
+            ),
+          ),
          ],
        ),
     );

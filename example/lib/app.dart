@@ -1,3 +1,4 @@
+import 'package:copyapp_example/pages/config_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,7 +21,8 @@ class _AppState extends State<App> {
   var _list = [
     new HomePage(),
     new DetailPage(),
-    new ImagePage()
+    new ImagePage(),
+    new ConfigPage()
   ];
 
   @override
@@ -78,19 +80,28 @@ class _AppState extends State<App> {
       ) ,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
+        fixedColor: Colors.white,
         onTap: (n){_changeIndex(n);},
         items: [
           BottomNavigationBarItem(
+            backgroundColor: Colors.black,
             icon: Icon(Icons.home),
             title: Text("主页")
           ),
           BottomNavigationBarItem(
+              backgroundColor: Colors.black,
             icon: Icon(Icons.color_lens),
             title: Text("调试")
           ),
           BottomNavigationBarItem(
+              backgroundColor: Colors.black,
             icon: Icon(Icons.panorama),
             title: Text("截图")
+          ),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.black,
+              icon: Icon(Icons.camera),
+              title: Text("系统")
           ),
         ],
       )

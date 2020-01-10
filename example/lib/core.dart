@@ -23,17 +23,20 @@ class Core {
 
   MovieModel movieModel;
 
+  bool _isInit = false;
+
   // 私有构造函数
   Core._internal() {
     print("私有构造函数 ===========");
   }
 
   void init() async {
-    print("初始化 =====");
-    if(isInit){
-      print("已经初始化 =====");
+    if(_isInit){
+
     }
     else{
+      _isInit = true;
+      
       channelTooler = new ChannelTooler();
       channelTooler.init();
 
@@ -43,11 +46,9 @@ class Core {
       eventTooler = new EventTooler();
 
       movieModel = new MovieModel();
-
+      
       sqlTooler = new SqlTooler();
       await sqlTooler.init();
-      isInit = true;
-      print("完成初始化 =====");
     }
     
   }

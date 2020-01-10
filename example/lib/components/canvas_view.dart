@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:ui' as UI; 
+import 'package:copyapp_example/model/image_rect_data.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
 
 class CanvasView extends CustomPainter{
   Paint mHelpPaint;
-  UI.Image image;
+  List<ImageRectData> imageRectDatas;
 
-  CanvasView(this.image):super();
+  CanvasView(this.imageRectDatas);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,14 +36,23 @@ class CanvasView extends CustomPainter{
     //   Offset(0, 0),
     //   mHelpPaint
     // );
-    canvas.drawImageRect(
-      image, 
-      Rect.fromLTWH(0, 0, image.width / 1, image.height / 1),
-      Rect.fromLTWH(0, 0, size.width, size.height), 
-      mHelpPaint
-    );
 
     canvas.drawRRect(rrect, mHelpPaint);
+    draw(canvas, size, mHelpPaint);
+  }
+
+  void draw(Canvas canvas, Size size, Paint paint){
+    var w = size.width / 3;
+    for(var i = 0; i < 3; i++){
+      var image = imageRectDatas[i].image;
+      
+      print("draw $i ==========");
+      if(image != null){
+        var srcRect = imageRectDatas[i].rect == null ? Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()) : imageRectDatas[i].rect;
+        var dstRect = Rect.fromLTWH(i * w, 0, w, size.height);
+        canvas.drawImageRect(image, srcRect, dstRect, paint);
+      }
+    }
   }
 
   @override

@@ -1,18 +1,15 @@
-import 'dart:async';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/components/edit_image.dart';
 import 'package:copyapp_example/pages/image_page.dart';
-import 'package:flutter/services.dart';
+import 'package:copyapp_example/tooler/image_tooler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../components/check_box.dart';
 import '../components/title_bar.dart';
 import '../components/edit_frame.dart';
 import '../components/edit_menu.dart';
-
-import 'dart:ui' as UI; 
 
 import './player_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../movie_model.dart';
+import 'dart:ui' as ui;
 
 class DetailPage extends StatefulWidget {
   DetailPage(){
@@ -40,9 +38,12 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   bool _running = false;
   var _copyData = "暂无";
-  var _isCheck = false;
-  UI.Image _image;
-  bool _isImageloaded = false;
+
+  bool _isImageLoad = false;
+  final GlobalKey _imgKey = GlobalKey();
+  CanvasView _painter;
+  List<ui.Image> _images = [];
+
 
   TextEditingController textEditingController = new TextEditingController();
   
@@ -51,15 +52,27 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   void initState(){
     super.initState();
-    _init();
+    // _loadImage();
+    _images.add(null);
+    _images.add(null);
+    _images.add(null);
   }
 
-  void _init() async {
-    var img = await loadUiImage("assets/images/wgj.jpg");
+  void _loadImage(id, path)async{
+    var img = await ImageTooler.loadImage(File(path));
+    print("$id 加载图片完成 ${path}");
+    print(img);
     setState(() {
-      _image = img;
-      _isImageloaded = true;
+      _isImageLoad = true;
+      _images[id] = img;
     });
+  }
+
+  void _onPickImage(n, data){
+    print("_onPickImage");
+    print(n);
+    print(data);
+    _loadImage(n, data["url"]);
   }
 
   @override
@@ -89,16 +102,6 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
   void _checkRunning() async{
     var res = await Core.instance.channelTooler.checkRunning();
     ToastTooler.toast(context, msg: res);
-
-//    var today = DateTime.now();
-//    print('当前时间是：$today');
-//    var date1 = today.millisecondsSinceEpoch;
-//    print('当前时间戳：$date1');
-//    var date2 = DateTime.fromMillisecondsSinceEpoch(date1);
-//    print('时间戳转日期：$date2');
-//    //拼接成date
-//    var dentistAppointment = new DateTime(2019, 6, 20, 17, 30,20);
-//    print(dentistAppointment);
   }
 
   void _setRunning(c) async{
@@ -109,75 +112,19 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     // ToastTooler.toast(context, msg: "check", position: ToastPostion.bottom);
   }
 
-  void _addWord() async{
-    // await Core.instance.sqlTooler.add("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！");
-    
-    // RegExp reg = new RegExp(r"一起来看！ (http\S+) 复制此链接");
-    String data = "姗姗💗＠¥发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/9ctVsLxo 复制此链接，打开【快手】直接观看！";
-    var list = StringTooler.getData(data);
-    if(list.length == 2){
-      await Core.instance.sqlTooler.add(list[0], list[1]);
-      _update();
-    }
-    
-  }
-
   void _update() async{
-    List<Map> movies = await Core.instance.sqlTooler.movies();
+    // List<Map> movies = await Core.instance.sqlTooler.movies();
     // var movieModel = Provider.of<MovieModel>(context);
     // movieModel.update(movies);
   }
-
-  void _playVideo(){
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => PlayerPage(
-                movie: {}
-            )
-        )
-    );
-  }
-
-  void _togglerSelect(s){
-    print(s);
-  }
-
-  void _togglerEdit(s){
-    print(s);
-  }
-
-  void _resetSystem(){
-    Core.instance.reset();
-  }
-
-  void _chooseImage(n){
-    print(n);
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => ImagePage(
-
-            )
-        )
-    );
-  }
-
-  Future<UI.Image> loadUiImage(String imageAssetPath) async {
-    final ByteData data = await rootBundle.load(imageAssetPath);
-    final Completer<UI.Image> completer = Completer();
-    UI.decodeImageFromList(Uint8List.view(data.buffer), (UI.Image img) {
-      return completer.complete(img);
-    });
-    return completer.future;
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     print("build call");
     // var TitleBar = TitleBar(togglerEdit: _togglerEdit, togglerSelect: _togglerSelect, title: "测试",);
-
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -208,11 +155,6 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
                 children: <Widget>[
                   MaterialButton(
                     color: Colors.amber,
-                    child: new Text('添加数据'),
-                    onPressed: (){_addWord();},
-                  ),
-                  MaterialButton(
-                    color: Colors.amber,
                     child: new Text('刷新数据'),
                     onPressed: (){_update();},
                   ),
@@ -226,16 +168,6 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 30),
-              width: ScreenUtil().setWidth(640),
-              height: ScreenUtil().setWidth(80),
-              child: MaterialButton(
-                color: Colors.amber,
-                child: new Text('重置系统'),
-                onPressed: (){_resetSystem();},
-              ),
-            ),
-            Container(
               padding: EdgeInsets.only(top: 20),
               child: Text("复制的文字", style: TextStyle(color: Colors.black26),),
             ),
@@ -244,16 +176,9 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               padding: EdgeInsets.all(30),
             ),
             Transform.scale(
-              child: new EditImage(),
+              child: new EditImage(onChange: _onPickImage),
               scale: 0.9,
             ),
-            _isImageloaded ?
-              CustomPaint(
-                size: Size(ScreenUtil().setWidth(750), ScreenUtil().setWidth(400)),
-                painter: CanvasView(_image),
-              )
-            :
-              Text("loading")
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )

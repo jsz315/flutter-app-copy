@@ -12,6 +12,7 @@ class EditFrame extends StatefulWidget {
   // var togglerEdit;
   var tip;
   var title;
+  var canEdit;
 
   EditFrame({
     Key key,
@@ -22,7 +23,8 @@ class EditFrame extends StatefulWidget {
     // this.togglerSelect,
     // this.togglerEdit,
     this.title,
-    this.tip
+    this.tip,
+    this.canEdit = true
   }) : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class _EditFrameState extends State<EditFrame> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _editMenu = new EditMenu(tip: widget.tip,);
-    _titleBar = new TitleBar(tip: widget.tip, title: widget.title,);
+    _titleBar = new TitleBar(tip: widget.tip, title: widget.title, canEdit: widget.canEdit,);
   }
 
   @override

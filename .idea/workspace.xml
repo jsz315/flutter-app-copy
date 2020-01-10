@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="fce299f0-3a7b-4f72-a13c-a196ad4fc5c6" name="Default Changelist" comment="" />
+=======
     <list default="true" id="fce299f0-3a7b-4f72-a13c-a196ad4fc5c6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
+>>>>>>> 13b0c8f63f1a2694a2e819625f905500457b98f5
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <ignored path="$PROJECT_DIR$/.pub/" />
@@ -288,7 +292,11 @@
       <window_info id="Capture Tool" order="7" />
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.3280507" />
+<<<<<<< HEAD
+      <window_info anchor="bottom" id="Run" order="1" weight="0.5130152" />
+=======
       <window_info anchor="bottom" id="Run" order="1" visible="true" weight="0.26941362" />
+>>>>>>> 13b0c8f63f1a2694a2e819625f905500457b98f5
       <window_info anchor="bottom" id="TODO" order="2" weight="0.3286334" />
       <window_info anchor="bottom" id="Android Profiler" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Logcat" order="4" />
