@@ -21,24 +21,34 @@ class Core {
 
   MovieModel movieModel;
 
+  bool _isInit = false;
+
   // 私有构造函数
   Core._internal() {
     
   }
 
   void init() async {
-    channelTooler = new ChannelTooler();
-    channelTooler.init();
+    if(_isInit){
 
-    sqlTooler = new SqlTooler();
-    await sqlTooler.init();
+    }
+    else{
+      _isInit = true;
+      
+      channelTooler = new ChannelTooler();
+      channelTooler.init();
 
-    downloadTooler = new DownloadTooler();
-    downloadTooler.init();
+      downloadTooler = new DownloadTooler();
+      downloadTooler.init();
 
-    eventTooler = new EventTooler();
+      eventTooler = new EventTooler();
 
-    movieModel = new MovieModel();
+      movieModel = new MovieModel();
+      
+      sqlTooler = new SqlTooler();
+      await sqlTooler.init();
+    }
+    
   }
 
   void reset(){

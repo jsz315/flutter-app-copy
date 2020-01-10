@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fce299f0-3a7b-4f72-a13c-a196ad4fc5c6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/app.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/app.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/components/edit_image.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/components/edit_image.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/core.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/core.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/movie_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/movie_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/detail_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/detail_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/home_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/image_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/image_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/player_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/player_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/viewer_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/viewer_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/pages/web_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/pages/web_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/tooler/event_tooler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/tooler/event_tooler.dart" afterDir="false" />
-    </list>
+    <list default="true" id="fce299f0-3a7b-4f72-a13c-a196ad4fc5c6" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <ignored path="$PROJECT_DIR$/.pub/" />
@@ -270,7 +255,7 @@
       <window_info id="Capture Tool" order="7" />
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.3280507" />
-      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.5130152" />
+      <window_info anchor="bottom" id="Run" order="1" weight="0.5130152" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.3286334" />
       <window_info anchor="bottom" id="Android Profiler" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Logcat" order="4" />

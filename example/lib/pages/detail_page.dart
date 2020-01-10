@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/components/edit_image.dart';
 import 'package:copyapp_example/pages/image_page.dart';
+import 'package:copyapp_example/tooler/image_tooler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../components/check_box.dart';
@@ -21,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../movie_model.dart';
+import 'dart:ui' as ui;
 
 class DetailPage extends StatefulWidget {
   DetailPage(){
@@ -35,6 +39,8 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
   bool _running = false;
   var _copyData = "暂无";
   var _isCheck = false;
+  ui.Image _image;
+  bool _isImageLoad = false;
 
   TextEditingController textEditingController = new TextEditingController();
   
@@ -43,6 +49,15 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
 
   void initState(){
     super.initState();
+    // _loadImage();
+  }
+
+  void _loadImage(path)async{
+    var img = await ImageTooler.loadImage(File(path));
+    setState(() {
+      _image = img;
+      _isImageLoad = true;
+    });
   }
 
   @override
@@ -221,10 +236,17 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               child: new EditImage(),
               scale: 0.9,
             ),
-            CustomPaint(
-              size: Size(ScreenUtil().setWidth(640), ScreenUtil().setWidth(400)),
-              painter: CanvasView(),
-            ),
+            _isImageLoad ?
+              FittedBox(
+                child: SizedBox(
+                  child: CustomPaint(
+                    size: Size(ScreenUtil().setWidth(640), ScreenUtil().setWidth(400)),
+                    painter: CanvasView(_image),
+                  )
+                )
+              )
+            :
+              Text("loading")
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)
           ],
         )
