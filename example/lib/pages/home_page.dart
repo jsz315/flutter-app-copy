@@ -4,6 +4,7 @@ import 'package:copyapp_example/components/check_box.dart';
 import 'package:copyapp_example/components/edit_frame.dart';
 import 'package:copyapp_example/tooler/event_tooler.dart';
 import 'package:copyapp_example/tooler/toast_tooler.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import './player_page.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     super.didChangeDependencies();
 
     _update();
-
+    print("--2 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
       print("--HomePage EditEvent--");
       if(e.tip == _tip){
@@ -261,7 +262,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             border: Border(
                 bottom: BorderSide(
                   color: Color.fromARGB(255, 240, 240, 240),
-                  width: 1,
+                  width: ScreenUtil().setWidth(1),
                 ))),
         child: Row(
           children: list

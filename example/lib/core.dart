@@ -14,6 +14,8 @@ class Core {
   // 静态私有成员，没有初始化
   static Core _instance;
 
+  bool isInit = false;
+
   SqlTooler sqlTooler;
   DownloadTooler downloadTooler;
   ChannelTooler channelTooler;
@@ -25,7 +27,7 @@ class Core {
 
   // 私有构造函数
   Core._internal() {
-    
+    print("私有构造函数 ===========");
   }
 
   void init() async {

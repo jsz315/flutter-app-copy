@@ -10,13 +10,15 @@ class TitleBar extends StatefulWidget {
   // var togglerSelect;
   // var togglerEdit;
   var tip;
+  var canEdit;
 
   TitleBar({
     Key key,
     this.title,
     // this.togglerSelect,
     // this.togglerEdit,
-    this.tip
+    this.tip,
+    this.canEdit
   }) : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class _TitleBarState extends State<TitleBar> {
   @override
   void initState(){
     super.initState();
+    print("--1 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e) {
       print("--EditMenu EditEvent--");
       setState(() {
@@ -72,7 +75,10 @@ class _TitleBarState extends State<TitleBar> {
           child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 18),),
         )
       ),
-      Positioned(
+    ];
+
+    if(widget.canEdit){
+      list.add(Positioned(
         right: 20,
         top: 0,
         bottom: 0,
@@ -82,27 +88,27 @@ class _TitleBarState extends State<TitleBar> {
               child: Text(_isEdit ? "完成" : "编辑", style: TextStyle(color: Colors.white),),
             )
         ),
-      )
-
-    ];
-
-    if(_isEdit){
-      // list.insert(0, Text("全选", style: TextStyle(color: Colors.white),));
-      list.insert(0, Positioned(
-        left: 10,
-        top: 0,
-        bottom: 0,
-        child: Row(
-          children: <Widget>[
-            CheckBox(
-              value: _isSelected,
-              onChanged: (c){_togglerSelect(c);},
-            ),
-            Text("全选", style: TextStyle(color: Colors.white),)
-          ],
-        ),
       ));
+
+      if(_isEdit){
+        // list.insert(0, Text("全选", style: TextStyle(color: Colors.white),));
+        list.add(Positioned(
+          left: 10,
+          top: 0,
+          bottom: 0,
+          child: Row(
+            children: <Widget>[
+              CheckBox(
+                value: _isSelected,
+                onChanged: (c){_togglerSelect(c);},
+              ),
+              Text("全选", style: TextStyle(color: Colors.white),)
+            ],
+          ),
+        ));
+      }
     }
+    
 
     return Container(
       height: 40,
