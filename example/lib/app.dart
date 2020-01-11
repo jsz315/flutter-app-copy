@@ -1,4 +1,5 @@
 import 'package:copyapp_example/pages/config_page.dart';
+import 'package:copyapp_example/pages/cover_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,7 +21,7 @@ class _AppState extends State<App> {
   var _index = 0;
   var _list = [
     new HomePage(),
-    new DetailPage(),
+    new CoverPage(),
     new ImagePage(),
     new ConfigPage()
   ];
@@ -91,7 +92,7 @@ class _AppState extends State<App> {
           BottomNavigationBarItem(
               backgroundColor: Colors.black,
             icon: Icon(Icons.color_lens),
-            title: Text("调试")
+            title: Text("封面")
           ),
           BottomNavigationBarItem(
               backgroundColor: Colors.black,

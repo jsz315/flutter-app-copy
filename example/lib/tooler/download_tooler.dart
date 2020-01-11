@@ -44,6 +44,14 @@ class DownloadTooler{
     createDir("$dir/capture/$tag");
   }
 
+  void scanFiles(){
+    var path = new Directory("$dir/video");
+    var entityList = path.listSync(recursive: true);
+    for(FileSystemEntity entity in entityList) {
+      print(entity);
+    }
+  }
+
   Future<void> load(url, type) async{
     var fname = getTimer();
     var dio = new Dio();

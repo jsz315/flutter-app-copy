@@ -160,16 +160,50 @@ class SqlTooler{
     // res = await movies();
     // print(res);
   }
+
+  Future<bool> find(word)async{
+    print("find ==");
+     var database = await db;
+    var list = await database.rawQuery('SELECT 1 FROM $videoTableName WHERE word="$word"');
+    if(list.length > 0){
+      return true;
+    }
+    return false;
+    
+
+    /*
+    var database = await db;
+    await database.transaction((txn) async {
+      print("=====0000=====");
+      // var sql = 'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")';
+      var count = await database.rawQuery('select * from $videoTableName');
+      print("count=$count");
+      // if(count > 0){
+      //   print("已经存在记录");
+      // }
+      // else{
+      //   print("已经不存在");
+      // }
+    });
+    */
+  }
   
 
   Future<void> add(word, link) async{
-    var database = await db;
-    await database.transaction((txn) async {
-      // var sql = 'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")';
-      var sql = 'INSERT INTO $videoTableName(word, link) VALUES("$word", "$link")';
-      int id = await txn.rawInsert(sql);
-      print('inserted: $id');
-    });
+    print("add word");
+    var has = await find(word);
+    if(has){
+      print("has data");
+    }
+    else{
+      var database = await db;
+      await database.transaction((txn) async {
+        var sql = 'INSERT INTO $videoTableName(word, link) VALUES("$word", "$link")';
+        int id = await txn.rawInsert(sql);
+        print('inserted: $id');
+      });
+    }
+    
   }
 
   Future<void> deleteVideo(id) async{
@@ -186,8 +220,15 @@ class SqlTooler{
 
   Future<List<Map>> movies() async{
     var database = await db;
-    List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName');
-    print(list);
+    List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName ORDER BY tag, time DESC');
+    print("全部数据：${list.length}");
+    return list;
+  }
+
+  Future<List<Map>> moviesNoVideo() async{
+    var database = await db;
+    List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName where video is NULL ORDER BY tag, time DESC');
+    print("全部空数据：${list.length}");
     return list;
   }
 

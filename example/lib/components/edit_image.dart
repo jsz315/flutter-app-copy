@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditImage extends StatefulWidget {
-  var onChange;
-  EditImage({Key key, this.onChange}) : super(key: key);
+  // var onChange;
+  EditImage({Key key}) : super(key: key);
 
   @override
   _EditImageState createState() => _EditImageState();
@@ -107,7 +107,7 @@ class _EditImageState extends State<EditImage> {
         setState(() {
           _paths[n] = data;
         });
-        widget.onChange(n, data);
+        // widget.onChange(n, data);
         var img = await ImageTooler.loadImage(File(data["url"]));
         setState(() {
           _imageRectDatas[n] = new ImageRectData(img, null, data["url"]);

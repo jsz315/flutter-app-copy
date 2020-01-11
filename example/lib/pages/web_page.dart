@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,6 +29,9 @@ class _WebPageState extends State<WebPage> {
   List<String> _tips = [];
   String _title = "";
   var _movie;
+  var _noVideos;
+  var _nid = 0;
+  Timer _timer;
 
   @override
   void initState(){
@@ -35,10 +39,33 @@ class _WebPageState extends State<WebPage> {
     _movie = widget.movie;
     print("initState current movie");
     print(_movie);
+//    _init();
+  }
 
+  void _init() async{
+    var res = await Core.instance.sqlTooler.moviesNoVideo();
+    print(res);
+    _noVideos = res;
+  }
+
+  void _download([bool auto = false]){
+    if(auto){
+      if(_nid < _noVideos.length){
+        setState(() {
+          _movie = _noVideos[_nid];
+        });
+        print("下载进度 $_nid/${_noVideos.length}");
+        _nid += 1;
+      }
+      else{
+        print("全部下载完成");
+      }
+    }
+    _callJavascript();
   }
 
   void _callJavascript(){
+    print("开始下载");
     var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
       print(res);
@@ -51,6 +78,10 @@ class _WebPageState extends State<WebPage> {
       setState(() {
         _tips.add("下载成功");
       });
+//      if(Core.instance.isAutoDownload){
+//          _download(true);
+//      }
+      
     });
     
   }
@@ -62,6 +93,16 @@ class _WebPageState extends State<WebPage> {
         _tips.add("获取标题成功");
       });
       Core.instance.sqlTooler.updateVideoTitle(_movie["id"], res);
+
+      if(Core.instance.isAutoDownload){
+        print("自动下载");
+        if(_timer != null){
+          print("取消前次延时回调方法");
+          _timer.cancel();
+        }
+        _timer = new Timer(Duration(seconds: 3), _callJavascript);
+        
+      }
     });
   }
 

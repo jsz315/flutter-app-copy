@@ -288,7 +288,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       // onMove: _moveItems,
       // togglerEdit: _togglerEdit,
       // togglerSelect: _chooseAll,
-      title: "视频列表",
+      title: "主页",
       tip: _tip,
       onRefresh: _update,
       child: _listView

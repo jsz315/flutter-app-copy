@@ -187,7 +187,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
       // onMove: _moveItems,
       // togglerEdit: _togglerEdit,
       // togglerSelect: _chooseAll,
-      title: "截图列表",
+      title: "截图",
       tip: _tip,
       onRefresh: _update,
       child: GridView.builder(

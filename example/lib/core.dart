@@ -13,8 +13,8 @@ class Core {
 
   // 静态私有成员，没有初始化
   static Core _instance;
-
-  bool isInit = false;
+  
+  bool isAutoDownload = false;
 
   SqlTooler sqlTooler;
   DownloadTooler downloadTooler;
@@ -24,6 +24,7 @@ class Core {
   MovieModel movieModel;
 
   bool _isInit = false;
+
 
   // 私有构造函数
   Core._internal() {

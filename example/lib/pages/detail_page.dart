@@ -128,7 +128,7 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("调试配置"),
+        title: Text("调试"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -176,7 +176,7 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
               padding: EdgeInsets.all(30),
             ),
             Transform.scale(
-              child: new EditImage(onChange: _onPickImage),
+              child: new EditImage(),
               scale: 0.9,
             ),
             // new EditMenu(onDelete: _onDelete, onMove: _onMove,)

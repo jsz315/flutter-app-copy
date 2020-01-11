@@ -46,6 +46,7 @@ class _TitleBarState extends State<TitleBar> {
 
   @override
   void initState(){
+    print("== titleBar initState");
     super.initState();
     print("--1 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e) {
@@ -123,6 +124,7 @@ class _TitleBarState extends State<TitleBar> {
 
   @override
   Widget build(BuildContext context) {
+    print("== titleBar buid");
     return Container(
       child:  _getAppBar(),
       decoration: BoxDecoration(

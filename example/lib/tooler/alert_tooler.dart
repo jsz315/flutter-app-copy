@@ -9,11 +9,7 @@ class AlertTooler{
         context: context,
         builder: (context){
           return AlertDialog(
-            content: Column(
-              children: <Widget>[
-                Text(tip)
-              ],
-            ),
+            content: Text(tip),
             title: Center(
                 child: Text(
                   title,
