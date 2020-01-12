@@ -211,6 +211,7 @@ class _AutoPageState extends State<AutoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
+        backgroundColor: Colors.black,
       ),
       body: Stack(
         children: <Widget>[

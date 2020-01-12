@@ -107,7 +107,7 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
     // await Core.instance.sqlTooler.add("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！");
     
     // RegExp reg = new RegExp(r"一起来看！ (http\S+) 复制此链接");
-    String data = "姗姗💗＠¥发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/9ctVsLxo 复制此链接，打开【快手】直接观看！";
+    String data = "#在抖音，记录美好生活#你们理想中的女朋友体重是多少呢？￼ https://v.douyin.com/qncYPB/ 复制此链接，打开【抖音短视频】，直接观看视频！";
     var list = StringTooler.getData(data);
     if(list.length == 2){
       await Core.instance.sqlTooler.add(list[0], list[1]);
@@ -124,10 +124,16 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
     print(res);
   }
 
-  void _testTimer(){
-    new Timer(Duration(seconds: 1), (){
-      print("定时执行====");
-    });
+  void _findSameVideo() async{
+    var aim = "https://v.douyin.com/qncYPB/";
+    var total = 0;
+    List list = await Core.instance.sqlTooler.movies();
+    for(var i = 0; i < list.length; i++){
+      if(list[i]["link"] == aim){
+        total++;
+      }
+    }
+    print("重复数据总数$total");
   }
 
   Widget _getSwitch(title, value, onChanged){
@@ -196,7 +202,7 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
             _getItem("添加数据", _addData),
             _getItem("扫描数据", _scanFiles),
             _getItem("查找空数据", _findNoVideo),
-            _getItem("测试定时数据", _testTimer),
+            _getItem("查找重复数据", _findSameVideo),
             Container(
               padding: EdgeInsets.all(20),
               alignment: Alignment.center,

@@ -135,6 +135,7 @@ class _WebPageState extends State<WebPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
+        backgroundColor: Colors.black,
       ),
       body: Stack(
         children: <Widget>[

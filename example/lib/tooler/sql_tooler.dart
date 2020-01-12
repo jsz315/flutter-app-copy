@@ -165,27 +165,11 @@ class SqlTooler{
     print("find ==");
      var database = await db;
     var list = await database.rawQuery('SELECT 1 FROM $videoTableName WHERE word="$word"');
+    print(list);
     if(list.length > 0){
       return true;
     }
     return false;
-    
-
-    /*
-    var database = await db;
-    await database.transaction((txn) async {
-      print("=====0000=====");
-      // var sql = 'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")';
-      var count = await database.rawQuery('select * from $videoTableName');
-      print("count=$count");
-      // if(count > 0){
-      //   print("已经存在记录");
-      // }
-      // else{
-      //   print("已经不存在");
-      // }
-    });
-    */
   }
   
 
