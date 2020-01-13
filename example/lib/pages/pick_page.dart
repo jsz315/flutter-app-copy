@@ -84,6 +84,7 @@ class _PickPageState extends State<PickPage> {
       appBar: AppBar(
         title: Text("选择图片"),
         centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: GridView.builder(
         itemCount: _datas.length,

@@ -187,7 +187,18 @@ class SqlTooler{
         print('inserted: $id');
       });
     }
-    
+  }
+
+  Future<void> addFile(tag, name) async{
+    var database = await db;
+    await database.transaction((txn) async {
+      var sql = 'INSERT INTO $videoTableName(video, image, tag) VALUES("$name.mp4", "$name.jpg", "$tag")';
+      if(tag == null){
+        sql = 'INSERT INTO $videoTableName(video, image) VALUES("$name.mp4", "$name.jpg")';
+      }
+      int id = await txn.rawInsert(sql);
+      print('inserted: $id');
+    });
   }
 
   Future<void> deleteVideo(id) async{

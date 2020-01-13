@@ -1,5 +1,8 @@
 package com.example.copyapp;
 
+import android.app.Activity;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.FlutterEngine;
@@ -17,6 +20,7 @@ public class CopyappPlugin implements FlutterPlugin {
 
   public static EventChannel.EventSink eventSink;
   public static boolean running = true;
+  public static Activity activity;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -38,6 +42,10 @@ public class CopyappPlugin implements FlutterPlugin {
           boolean r = call.argument("running");
           running = r;
           result.success(running);
+        }
+        else if(call.method.equals("toast")){
+          String msg = call.argument("msg");
+          CopyappPlugin.toast(msg);
         }
         else {
           result.notImplemented();
@@ -73,5 +81,9 @@ public class CopyappPlugin implements FlutterPlugin {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  }
+
+  public static void toast(String msg){
+    Toast.makeText(CopyappPlugin.activity.getApplicationContext(), msg,Toast.LENGTH_LONG).show();
   }
 }

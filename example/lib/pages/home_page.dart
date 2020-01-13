@@ -30,10 +30,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   bool get wantKeepAlive => true;
 
-  _itemClick(id) {
+  void _itemClick(id) {
     // var movieModel = Provider.of<MovieModel>(context);
     // movieModel.choose(id);
     var movie = _movies[id];
+    if(movie['link'] == null){
+      ToastTooler.toast(context, msg: "链接不存在");
+      return;
+    }
     print("goto web ${movie['link']}");
     Navigator.push(
         context,
@@ -58,7 +62,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   Image _getImage(item){
     var path = item["image"];
+    var fname = Core.instance.downloadTooler.getPosterPath(item);
+    var hasImage = true;
     if(path == null){
+      hasImage = false;
+    }
+    else{
+      var file = new File(fname);
+      if(file.existsSync() == false){
+        hasImage = false;
+      }
+    }
+
+    if(hasImage == false){
       return Image.asset(
         "assets/images/wgj.jpg",
         fit: BoxFit.cover
@@ -171,6 +187,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     // Scaffold.of(context).showSnackBar(SnackBar(content: Center(child: Text("操作成功")), duration: Duration(seconds: 2),));
   }
 
+  Future<void> _deleteItem(id) async{
+    await Core.instance.downloadTooler.deleteVideoItem(_movies[id]);
+    await _update();
+    ToastTooler.toast(context, msg: "操作成功");
+  }
+
   Future<void> _moveItems(tag) async{
     print("创建目录 $tag");
      Core.instance.downloadTooler.createVideoTagDir(tag);
@@ -196,14 +218,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     var list = <Widget>[
       Expanded(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              _movies[id]["word"],
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style:
-              TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
-              strutStyle: StrutStyle(height: 1.6),
+            GestureDetector(
+              onTap: (){_itemClick(id);},
+              child: Text(
+                _movies[id]["word"] == null ? "来源扫描恢复的数据，链接不可访问，视频可正常播放" : _movies[id]["word"],
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                textAlign: TextAlign.left,
+                style:
+                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                strutStyle: StrutStyle(height: 1.6),
+              ),
             ),
             Container(
               child: Row(
@@ -251,10 +279,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       );
     }
 
-    return GestureDetector(
-      onTap: () {
-        _itemClick(id);
-      },
+    return Dismissible(
+      key: Key("item_${_movies[id]['id']}"),
+      movementDuration: Duration(milliseconds: 600),
+      onDismissed: (_){_deleteItem(id);},
       child: Container(
         padding: EdgeInsets.only(
             left: _isEdit ? 0 : 20.0, top: 10.0, right: 20.0, bottom: 10.0),
@@ -269,13 +297,29 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         ),
       ),
     );
+    // GestureDetector(
+    //   onTap: () {
+    //     _itemClick(id);
+    //   },
+    //   child: Container(
+    //     padding: EdgeInsets.only(
+    //         left: _isEdit ? 0 : 20.0, top: 10.0, right: 20.0, bottom: 10.0),
+    //     decoration: BoxDecoration(
+    //         border: Border(
+    //             bottom: BorderSide(
+    //               color: Color.fromARGB(255, 240, 240, 240),
+    //               width: ScreenUtil().setWidth(1),
+    //             ))),
+    //     child: Row(
+    //       children: list
+    //     ),
+    //   ),
+    // );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    print("home page build ************");
 
     ListView _listView = ListView.builder(
         itemCount: _movies.length,

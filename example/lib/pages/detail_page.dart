@@ -34,7 +34,7 @@ class DetailPage extends StatefulWidget {
   _DetailPageState createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMixin implements SystemListener {
+class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMixin {
 
   bool _running = false;
   var _copyData = "暂无";
@@ -81,16 +81,16 @@ class _DetailPageState extends State<DetailPage> with AutomaticKeepAliveClientMi
     super.didChangeDependencies();
     
     _getRunning();
-    Core.instance.channelTooler.listen(this);
+    // Core.instance.channelTooler.listen(this);
   }
 
-  @override
-  onReceive(obj) {
-    print(obj);
-    setState(() {
-      _copyData = obj;
-    });
-  }
+  // @override
+  // onReceive(obj) {
+  //   print(obj);
+  //   setState(() {
+  //     _copyData = obj;
+  //   });
+  // }
 
   void _getRunning() async{
     var res = await Core.instance.channelTooler.getRunning();

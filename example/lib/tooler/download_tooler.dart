@@ -48,12 +48,30 @@ class DownloadTooler{
     var path = new Directory("$dir/video");
     var entityList = path.listSync(recursive: true);
     for(FileSystemEntity entity in entityList) {
-      print(entity);
+      if(entity is File){
+        print(entity.path);
+        var tag = getTag(entity.path);
+        var name = getName(entity.path);
+        Core.instance.sqlTooler.addFile(tag, name);
+      }
     }
   }
 
-  Future<void> load(url, type) async{
-    var fname = getTimer();
+  String getTag(path){
+    var str = path.split("$dir/video/")[1];
+    var list = str.split("/");
+    if(list.length == 2){
+      return list[0];
+    }
+    return null;
+  }
+
+  String getName(path){
+    List list = path.split("/");
+    return list.last.split(".")[0];
+  }
+
+  Future<void> load(url, type, fname) async{
     var dio = new Dio();
     var path = type == 1 ? "$dir/poster/$fname.jpg" : "$dir/video/$fname.mp4";
     Response response = await dio.download(url, path);
@@ -160,8 +178,9 @@ class DownloadTooler{
   // }
   Future<void> start(id, poster, src) async{
     _id = id;
-    await load(poster, 1);
-    await load(src, 2);
+    var fname = getTimer();
+    await load(poster, 1, fname);
+    await load(src, 2, fname);
 
     // var sql = new SqlTooler();r
     // await sql.init();
@@ -180,6 +199,11 @@ class DownloadTooler{
     var file = new File(path);
     file.writeAsBytesSync(bytes);
     Core.instance.sqlTooler.saveCapture(path.split("/").last);
+  }
+
+  Future<void> savePoster(Uint8List bytes, String fname) async{
+    var file = new File(fname);
+    file.writeAsBytesSync(bytes);
   }
 
   Future<void> writeData(url) async{

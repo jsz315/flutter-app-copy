@@ -78,10 +78,6 @@ class _WebPageState extends State<WebPage> {
       setState(() {
         _tips.add("下载成功");
       });
-//      if(Core.instance.isAutoDownload){
-//          _download(true);
-//      }
-      
     });
     
   }

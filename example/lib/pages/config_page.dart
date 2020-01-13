@@ -26,6 +26,9 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
   bool _auto = Core.instance.isAutoDownload;
   var _movie;
   var _copyData = "暂无数据";
+
+  int toastTimer = 0;
+  Timer tid;
   
   Future<void> _update() async{
 
@@ -46,6 +49,17 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
     setState(() {
       _copyData = obj;
     });
+//    ToastTooler.toast(context, msg: "数据已经复制", position: ToastPostion.bottom);
+
+     if(tid != null){
+       print("取消前次延时回调方法");
+       tid.cancel();
+       toastTimer++;
+     }
+     tid = new Timer(Duration(seconds: 1), (){
+       Core.instance.channelTooler.toast("数据已经复制($toastTimer)");
+       toastTimer = 0;
+     });
   }
 
   void _getRunning() async{
@@ -136,12 +150,21 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
     print("重复数据总数$total");
   }
 
-  Widget _getSwitch(title, value, onChanged){
+  Widget _getSwitch(title, tip, value, onChanged){
     return Container(
-              padding: EdgeInsets.only(left: 20, top: 10, right: 10, bottom: 10),
+              padding: EdgeInsets.only(left: 20, top: 15, right: 10, bottom: 15),
               child: Row(children: <Widget>[
                 Expanded(
-                  child: Text(title),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(title),
+                      Container(
+                        child: Text(tip, style: TextStyle(color: Colors.black26),),
+                        margin: EdgeInsets.only(top: 5),
+                      )
+                    ],
+                  ),
                   flex: 1,
                 ),
                 CupertinoSwitch(
@@ -155,13 +178,22 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
             );
   }
 
-  Widget _getItem(title, onPressed){
+  Widget _getItem(title, tip, onPressed){
     return Container(
               padding: EdgeInsets.only(left: 20, top: 10, right: 15, bottom: 10),
               child: Row(
                 children: <Widget>[
                 Expanded(
-                  child: Text(title),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(title),
+                      Container(
+                        child: Text(tip, style: TextStyle(color: Colors.black26),),
+                        margin: EdgeInsets.only(top: 5),
+                      )
+                    ],
+                  ),
                   flex: 1,
                 ),
                 FlatButton.icon(
@@ -195,14 +227,14 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            _getSwitch("系统服务", _running, _setRunning),
-            _getItem("自动下载", _autoDownload),
-            _getItem("调用系统方法", _checkRunning),
-            _getItem("数据重置", _resetSystem),
-            _getItem("添加数据", _addData),
-            _getItem("扫描数据", _scanFiles),
-            _getItem("查找空数据", _findNoVideo),
-            _getItem("查找重复数据", _findSameVideo),
+            _getSwitch("系统服务", "侦听系统剪贴板复制操作", _running, _setRunning),
+            _getItem("自动下载", "自动下载视频", _autoDownload),
+            _getItem("调用系统方法", "检测原生系统调用是否正常", _checkRunning),
+            _getItem("数据重置", "清空数据库数据", _resetSystem),
+            _getItem("添加数据", "添加一条测试数据", _addData),
+            _getItem("扫描数据", "扫描文件系统下面的视频", _scanFiles),
+            _getItem("查找空数据", "查看所有未下载的视频数据", _findNoVideo),
+            _getItem("查找重复数据", "查看重复数据的数目", _findSameVideo),
             Container(
               padding: EdgeInsets.all(20),
               alignment: Alignment.center,

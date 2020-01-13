@@ -51,6 +51,10 @@ class ChannelTooler{
     var res = await _methodChannel.invokeMethod("getRunning");
     return res;
   }
+
+  Future<bool> toast(msg) async{
+    await _methodChannel.invokeMethod("toast", <String, String>{"msg": msg});
+  }
 }
 
 class SystemListener{

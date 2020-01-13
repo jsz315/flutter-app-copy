@@ -29,13 +29,17 @@ class _AutoPageState extends State<AutoPage> {
   String _title = "";
   var _movie;
   var _noVideos;
-  var _nid = 0;
   Timer _timer;
   var _running = true;
 
   @override
   void initState(){
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
     _init();
   }
 

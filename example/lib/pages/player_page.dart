@@ -57,6 +57,24 @@ class _PlayerPageState extends State<PlayerPage> {
     }
   }
 
+  void _setPoster() async{
+    try {
+      Uint8List pngBytes = await VideoThumbnail.thumbnailData(
+        video: _path, // Path of that video
+        imageFormat: ImageFormat.JPEG,
+        quality: 100,
+        timeMs: _controller.value.position.inMilliseconds,
+      );
+      var fname = Core.instance.downloadTooler.getPosterPath(_movie);
+      await Core.instance.downloadTooler.savePoster(pngBytes, fname);
+      ToastTooler.toast(context, msg: "保存图片成功");
+
+    } catch (e) {
+      print(e);
+      ToastTooler.toast(context, msg: "保存图片失败");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print("build");
@@ -95,13 +113,19 @@ class _PlayerPageState extends State<PlayerPage> {
               left: 20,
               bottom: 20,
               child: Container(
-                width: ScreenUtil().setWidth(200),
-                height: ScreenUtil().setWidth(90),
+                width: ScreenUtil().setWidth(500),
+                height: ScreenUtil().setWidth(96),
                 decoration: BoxDecoration(
                   color: Colors.amberAccent,
                   borderRadius: BorderRadius.circular(8)
                 ),
-                child: FlatButton.icon(onPressed: (){_capture();}, icon: Icon(Icons.movie), label: Text("截图")),
+                child: Row(
+                  children: <Widget>[
+                    FlatButton.icon(onPressed: (){_setPoster();}, icon: Icon(Icons.photo_library), label: Text("设置封面")),
+                    FlatButton.icon(onPressed: (){_capture();}, icon: Icon(Icons.movie), label: Text("截图")),
+                  ],
+                )
+                
               )
 
           )
