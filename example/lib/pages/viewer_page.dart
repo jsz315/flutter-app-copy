@@ -34,18 +34,20 @@ class _ViewerPageState extends State<ViewerPage> {
 
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.black,
       body: RepaintBoundary(
         key: _imgKey,
         child: Center(
           child: Container(
-            width: ScreenUtil().setWidth(720),
-            height: ScreenUtil().setWidth(1280),
+            width: widget.eidt ? ScreenUtil().setWidth(720) : w,
+            height: widget.eidt ? ScreenUtil().setWidth(1280) : h,
             child: ExtendedImage.file(
               File(widget.path),
               fit:BoxFit.contain,
-              mode: widget.eidt ? ExtendedImageMode.editor : ExtendedImageMode.none,
+              mode: widget.eidt ? ExtendedImageMode.editor : ExtendedImageMode.gesture,
               extendedImageEditorKey: editorKey,
               initEditorConfigHandler: (state){
                 return EditorConfig(

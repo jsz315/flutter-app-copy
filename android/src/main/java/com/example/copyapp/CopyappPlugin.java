@@ -1,6 +1,9 @@
 package com.example.copyapp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +24,11 @@ public class CopyappPlugin implements FlutterPlugin {
   public static EventChannel.EventSink eventSink;
   public static boolean running = true;
   public static Activity activity;
+  public static Context context;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+    context = flutterPluginBinding.getApplicationContext();
     init(flutterPluginBinding.getFlutterEngine().getDartExecutor());
   }
 
@@ -76,6 +81,7 @@ public class CopyappPlugin implements FlutterPlugin {
   // depending on the user's project. onAttachedToEngine or registerWith must both be defined
   // in the same class.
   public static void registerWith(Registrar registrar) {
+    context = registrar.context();
     init(registrar.messenger());
   }
 
@@ -84,6 +90,12 @@ public class CopyappPlugin implements FlutterPlugin {
   }
 
   public static void toast(String msg){
-    Toast.makeText(CopyappPlugin.activity.getApplicationContext(), msg,Toast.LENGTH_LONG).show();
+    View toastRoot = activity.getLayoutInflater().inflate(R.layout.toast_layout, null);
+    Toast toast = new Toast(context);
+    toast.setView(toastRoot);
+    TextView tv = (TextView)toastRoot.findViewById(R.id.TextViewInfo);
+    tv.setText(msg);
+    toast.show();
+//    Toast.makeText(context, msg,Toast.LENGTH_LONG).show();
   }
 }

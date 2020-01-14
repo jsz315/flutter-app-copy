@@ -2,6 +2,8 @@ package com.example.copyapp_example;
 import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.copyapp.CopyappPlugin;
@@ -30,4 +32,5 @@ public class FlutterEvents {
         };
         clipboardManager.addPrimaryClipChangedListener(onPrimaryClipChangedListener);
     }
+
 }
