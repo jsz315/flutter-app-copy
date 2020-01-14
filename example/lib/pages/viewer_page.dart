@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:copyapp_example/tooler/image_tooler.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 import '../core.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,9 @@ import 'package:flutter/services.dart';
 import '../tooler/toast_tooler.dart';
 
 class ViewerPage extends StatefulWidget {
-  final path;
-  final eidt;
-  ViewerPage({this.path, this.eidt = true});
+  final id;
+  final items;
+  ViewerPage({this.id, this.items});
 
   @override
   _ViewerPageState createState() => _ViewerPageState();
@@ -24,45 +25,80 @@ class ViewerPage extends StatefulWidget {
 
 class _ViewerPageState extends State<ViewerPage> {
 
-  final GlobalKey _imgKey = GlobalKey();
-  final GlobalKey<ExtendedImageEditorState> editorKey  = GlobalKey<ExtendedImageEditorState>();
+  int _id = 0;
 
-  void _capture() async{
-    var rect = editorKey.currentState.getCropRect();
-    Navigator.of(context).pop(rect);
+  void initState(){
+    super.initState();
+    _id = widget.id;
+  }
+
+
+  void _onChange(n){
+    print("$n");
+    setState(() {
+      _id = n;
+    });
+  }
+
+  Widget _swiperBuilder(BuildContext context, int index) {
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+    var item = widget.items[index];
+    var path = Core.instance.downloadTooler.getCapturePath(item);
+    return Center(
+          child: Container(
+            width: w,
+            height: h,
+            child: ExtendedImage.file(
+              File(path),
+              fit:BoxFit.contain,
+              mode: ExtendedImageMode.gesture,
+            ),
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    var w = MediaQuery.of(context).size.width;
-    var h = MediaQuery.of(context).size.height;
+    var cur = _id + 1;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: RepaintBoundary(
-        key: _imgKey,
-        child: Center(
-          child: Container(
-            width: widget.eidt ? ScreenUtil().setWidth(720) : w,
-            height: widget.eidt ? ScreenUtil().setWidth(1280) : h,
-            child: ExtendedImage.file(
-              File(widget.path),
-              fit:BoxFit.contain,
-              mode: widget.eidt ? ExtendedImageMode.editor : ExtendedImageMode.gesture,
-              extendedImageEditorKey: editorKey,
-              initEditorConfigHandler: (state){
-                return EditorConfig(
-                  cropAspectRatio: CropAspectRatios.ratio9_16,
-                );
-              },
+      body: Stack(
+        children: <Widget>[
+            Swiper(
+              itemBuilder: _swiperBuilder,
+              itemCount: widget.items.length,
+              // pagination: new SwiperPagination(
+              //   builder: DotSwiperPaginationBuilder(
+              //     color: Colors.black54,
+              //     activeColor: Colors.white,
+              //   )
+              // ),
+              // control: new SwiperControl(),
+              scrollDirection: Axis.horizontal,
+              autoplay: false,
+              index: _id,
+              onIndexChanged: (n){_onChange(n);},
+              // onTap: (index) => print('点击了第$index个'),
             ),
-        ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "viewer",
-        child: Icon(Icons.camera_alt),
-        onPressed: (){_capture();},
-      ),
+            Positioned(
+              left: ScreenUtil().setWidth(300),
+              bottom: 10,
+              width: ScreenUtil().setWidth(150),
+              height: ScreenUtil().setWidth(40),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Color.fromARGB(90, 0, 0, 0)
+                ),
+                child: Center(
+                  child: Text("$cur/${widget.items.length}", style: TextStyle(color: Colors.amber),),
+                ) 
+              ),
+            )
+        ],
+      ) 
+      
     );
   }
 }

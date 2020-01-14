@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/model/image_rect_data.dart';
+import 'package:copyapp_example/pages/clip_page.dart';
 import 'package:copyapp_example/pages/image_page.dart';
 import 'package:copyapp_example/pages/pick_page.dart';
 import 'package:copyapp_example/pages/viewer_page.dart';
@@ -126,7 +127,7 @@ class _EditImageState extends State<EditImage> {
      Navigator.push(
          context,
          new MaterialPageRoute(
-             builder: (context) => ViewerPage(
+             builder: (context) => ClipPage(
                  path: _imageRectDatas[n].path
              )
          )

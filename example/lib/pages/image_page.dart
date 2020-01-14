@@ -91,14 +91,13 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     });
   }
 
-  void _showImage(path){
-    print(path);
+  void _showImage(id){
     Navigator.push(
         context,
         new MaterialPageRoute(
             builder: (context) => ViewerPage(
-                path: path,
-                eidt: false,
+                id: id,
+                items: _datas
             )
         )
     );
@@ -134,7 +133,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
-        onTap: (){_showImage(Core.instance.downloadTooler.getCapturePath(item));},
+        onTap: (){_showImage(id);},
         child: Stack(
           children: list
         )
