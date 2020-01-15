@@ -35,7 +35,6 @@ class SqlTooler{
     await db.execute(
       "CREATE TABLE $captureTableName (id INTEGER PRIMARY KEY, image TEXT, tag TEXT, time TIMESTAMP default (datetime('now', 'localtime')))"
     );
-    print("数据库创建成功");
   }
   
   Future<void> reset()async{
@@ -47,62 +46,7 @@ class SqlTooler{
   }
 
   Future<void> init() async{
-    // var databasesPath = await getDatabasesPath();
-    // String path = databasesPath + '/$databaseName.db';
-    // print(path);
-
-    // // Delete the database
-    // await deleteDatabase(path);
-
-    // // open the database
-    // database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-    //   // When creating the db, create the table
-    //   await db.execute(
-    //     'CREATE TABLE $videoTableName (id INTEGER PRIMARY KEY, word TEXT, link TEXT, title TEXT, image TEXT, video TEXT)'
-    //   );
-    // });
-
-    // print("数据库创建成功");
-
-    // Insert some records in a transaction
-    // await database.transaction((txn) async {
-    //   int id1 = await txn.rawInsert(
-    //     'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")'
-    //   );
-    //   print('inserted1: $id1');
-    // });
-
-    // Update some record
-    /*
-    int count = await database.rawUpdate(
-        'UPDATE $videoTableName SET link = ?, title = ? WHERE name = ?',
-        ['updated name', '9876', 'some name']);
-    print('updated: $count');
-    */
-
-    // Get the records
-    // List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName');
-    // List<Map> expectedList = [
-    //   {'name': 'updated name', 'id': 1, 'value': 9876, 'num': 456.789},
-    //   {'name': 'another name', 'id': 2, 'value': 12345678, 'num': 3.1416}
-    // ];
-    // print(list);
-    // print(expectedList);
-
-    // Count the records
-    /*
-    count = Sqflite
-        .firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM $videoTableName'));
-    assert(count == 2);
-
-    // Delete a record
-    count = await database
-        .rawDelete('DELETE FROM $videoTableName WHERE name = ?', ['another name']);
-    assert(count == 1);
-    */
-
-    // Close the database
-    // await database.close();
+    
   }
 
   Future<void> update(id, title) async {
@@ -111,7 +55,7 @@ class SqlTooler{
         'UPDATE $videoTableName SET title = ? WHERE id = ?',
         [title, id]
       );
-    print('updated: $count');
+      
   }
 
   Future<void> updateVideoTitle(id, title) async {
@@ -120,7 +64,7 @@ class SqlTooler{
         'UPDATE $videoTableName SET title = ? WHERE id = ?',
         [title, id]
       );
-    print('updated: $count');
+      
   }
 
   Future<void> updatePoster(id, image) async {
@@ -129,7 +73,7 @@ class SqlTooler{
         'UPDATE $videoTableName SET image = ? WHERE id = ?',
         [image, id]
       );
-    print('updated: $count');
+      
   }
 
   Future<void> updateVideo(id, video) async {
@@ -138,7 +82,7 @@ class SqlTooler{
         'UPDATE $videoTableName SET video = ? WHERE id = ?',
         [video, id]
       );
-    print('updated: $count');
+      
   }
 
   Future<void> updateTag(id, tag) async {
@@ -147,7 +91,7 @@ class SqlTooler{
         'UPDATE $videoTableName SET tag = ? WHERE id = ?',
         [tag, id]
       );
-    print('updated: $count');
+      
   }
 
   Future<void> test() async {
@@ -158,14 +102,11 @@ class SqlTooler{
     // await updateTitle(2, "哈哈");
     // await delete(1);
     // res = await movies();
-    // print(res);
   }
 
   Future<bool> find(word)async{
-    print("find ==");
      var database = await db;
     var list = await database.rawQuery('SELECT 1 FROM $videoTableName WHERE word="$word"');
-    print(list);
     if(list.length > 0){
       return true;
     }
@@ -174,17 +115,16 @@ class SqlTooler{
   
 
   Future<void> add(word, link) async{
-    print("add word");
     var has = await find(word);
     if(has){
-      print("has data");
+      
     }
     else{
       var database = await db;
       await database.transaction((txn) async {
         var sql = 'INSERT INTO $videoTableName(word, link) VALUES("$word", "$link")';
         int id = await txn.rawInsert(sql);
-        print('inserted: $id');
+        
       });
     }
   }
@@ -197,33 +137,31 @@ class SqlTooler{
         sql = 'INSERT INTO $videoTableName(video, image) VALUES("$name.mp4", "$name.jpg")';
       }
       int id = await txn.rawInsert(sql);
-      print('inserted: $id');
+      
     });
   }
 
   Future<void> deleteVideo(id) async{
     var database = await db;
     var count = await database.rawDelete('DELETE FROM $videoTableName WHERE id = ?', [id]);
-    print('count: $count');
   }
 
   Future<void> deleteCapture(id) async{
     var database = await db;
     var count = await database.rawDelete('DELETE FROM $captureTableName WHERE id = ?', [id]);
-    print('count: $count');
   }
 
   Future<List<Map>> movies() async{
     var database = await db;
     List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName ORDER BY tag, time DESC');
-    print("全部数据：${list.length}");
+    
     return list;
   }
 
   Future<List<Map>> moviesNoVideo() async{
     var database = await db;
     List<Map> list = await database.rawQuery('SELECT * FROM $videoTableName where video is NULL ORDER BY tag, time DESC');
-    print("全部空数据：${list.length}");
+    
     return list;
   }
 
@@ -233,14 +171,14 @@ class SqlTooler{
       // var sql = 'INSERT INTO $videoTableName(word) VALUES("驾培🏅戴教练发了一个快手作品，一起来看！ http://kphshanghai.m.chenzhongtech.com/s/xNbMeYmE 复制此链接，打开【快手】直接观看！")';
       var sql = 'INSERT INTO $captureTableName(image) VALUES("$image")';
       int id = await txn.rawInsert(sql);
-      print('inserted: $id');
+      
     });
   }
 
   Future<List<Map>> captures() async{
     var database = await db;
     List<Map> list = await database.rawQuery('SELECT * FROM $captureTableName');
-    print(list);
+    
     return list;
   }
 
@@ -265,7 +203,7 @@ class SqlTooler{
         'UPDATE $captureTableName SET tag = ? WHERE id = ?',
         [tag, id]
     );
-    print("更新记录成功");
+    
   }
 
 }

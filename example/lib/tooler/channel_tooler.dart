@@ -19,7 +19,7 @@ class ChannelTooler{
   }
 
   void _onEnvent(Object obj){
-    print(obj);
+    
     var list = StringTooler.getData(obj);
     if(list.length == 2){
       Core.instance.sqlTooler.add(list[0], list[1]);

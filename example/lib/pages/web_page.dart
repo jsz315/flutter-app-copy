@@ -12,7 +12,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../movie_model.dart';
 import '../tooler/download_tooler.dart';
 
 class WebPage extends StatefulWidget {
@@ -37,14 +36,11 @@ class _WebPageState extends State<WebPage> {
   void initState(){
     super.initState();
     _movie = widget.movie;
-    print("initState current movie");
-    print(_movie);
 //    _init();
   }
 
   void _init() async{
     var res = await Core.instance.sqlTooler.moviesNoVideo();
-    print(res);
     _noVideos = res;
   }
 
@@ -54,21 +50,20 @@ class _WebPageState extends State<WebPage> {
         setState(() {
           _movie = _noVideos[_nid];
         });
-        print("下载进度 $_nid/${_noVideos.length}");
+        
         _nid += 1;
       }
       else{
-        print("全部下载完成");
+        
       }
     }
     _callJavascript();
   }
 
   void _callJavascript(){
-    print("开始下载");
     var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
-      print(res);
+      
       String str1 = res.toString();
       var aim = str1.replaceAll(new RegExp(r'\\'), "");
       aim = aim.substring(1, aim.length -1 );
@@ -91,9 +86,7 @@ class _WebPageState extends State<WebPage> {
       Core.instance.sqlTooler.updateVideoTitle(_movie["id"], res);
 
       if(Core.instance.isAutoDownload){
-        print("自动下载");
         if(_timer != null){
-          print("取消前次延时回调方法");
           _timer.cancel();
         }
         _timer = new Timer(Duration(seconds: 3), _callJavascript);
@@ -123,9 +116,6 @@ class _WebPageState extends State<WebPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build current movie");
-    print(_movie);
-
     Widget listView = _getTips();
     
     return Scaffold(
@@ -145,7 +135,6 @@ class _WebPageState extends State<WebPage> {
               _setTitle();
             },
             navigationDelegate: (NavigationRequest navigationRequest){
-              print("内部跳转：${navigationRequest.url}");
               return NavigationDecision.navigate;
             },
           ),

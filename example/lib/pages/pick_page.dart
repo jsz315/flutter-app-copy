@@ -26,7 +26,6 @@ class _PickPageState extends State<PickPage> {
 
   @override
   void didChangeDependencies(){
-    print("pick page didChangeDependencies --------");
     super.didChangeDependencies();
 
     _update();
@@ -40,7 +39,6 @@ class _PickPageState extends State<PickPage> {
   }
 
   void _selectImage(id){
-    print(_datas[id]);
     Navigator.of(context).pop(
       {
         "type": "file",
@@ -79,7 +77,6 @@ class _PickPageState extends State<PickPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("pick page build --------");
     return Scaffold(
       appBar: AppBar(
         title: Text("选择图片"),

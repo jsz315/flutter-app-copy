@@ -2,6 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:copyapp_example/config.dart';
+import 'package:copyapp_example/model/capture_model.dart';
+import 'package:provider/provider.dart';
+
 import '../components/check_box.dart';
 import '../components/edit_frame.dart';
 import '../pages/viewer_page.dart';
@@ -15,12 +19,12 @@ import 'package:flutter/services.dart';
 
 import '../tooler/toast_tooler.dart';
 
-class ImagePage extends StatefulWidget {
+class CapturePage extends StatefulWidget {
   @override
-  _ImagePageState createState() => _ImagePageState();
+  _CapturePageState createState() => _CapturePageState();
 }
 
-class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixin {
+class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClientMixin {
 
   var _isEdit = false;
   List _selectedList = [];
@@ -36,9 +40,7 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     super.didChangeDependencies();
 
     _update();
-    print("--3 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
-      print("--EditEvent--");
       if(e.tip == _tip){
         setState(() {
           _isEdit = e.edit;
@@ -48,21 +50,18 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
     });
 
     Core.instance.eventTooler.eventBus.on<SelectEvent>().listen((e){
-      print("--SelectEvent--");
       if(e.tip == _tip){
         _chooseAll(e.select);
       }
     });
 
     Core.instance.eventTooler.eventBus.on<DeleteEvent>().listen((e){
-      print("--DeleteEvent--");
       if(e.tip == _tip){
         _deleteItems();
       }
     });
 
     Core.instance.eventTooler.eventBus.on<MoveEvent>().listen((e){
-      print("--MoveEvent--");
       if(e.tip == _tip){
         _moveItems(e.tag);
       }
@@ -72,6 +71,10 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
 
   Future<void> _update() async{
     List<Map> captures = await Core.instance.sqlTooler.captures();
+
+    var captureModel = Provider.of<CaptureModel>(context);
+    captureModel.update(captures);
+
     var slist = [];
     captures.forEach((val){
       slist.add(false);
@@ -87,7 +90,6 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
   void _chooseOne(c, id){
     setState(() {
       _selectedList[id] = c;
-      print(_selectedList);
     });
   }
 
@@ -156,7 +158,6 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
   }
 
   Future<void> _moveItems(tag) async{
-    print("创建目录 $tag");
      Core.instance.downloadTooler.createCaptureTagDir(tag);
      var selects = _selectedList.sublist(0);
      for(var i = 0; i < selects.length; i++){
@@ -176,17 +177,12 @@ class _ImagePageState extends State<ImagePage> with AutomaticKeepAliveClientMixi
       }
     });
   }
-
-
+  
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return new EditFrame(
-      // onDelete: _deleteItems,
-      // onMove: _moveItems,
-      // togglerEdit: _togglerEdit,
-      // togglerSelect: _chooseAll,
-      title: "截图",
+      title: Config.capture,
       tip: _tip,
       onRefresh: _update,
       child: GridView.builder(

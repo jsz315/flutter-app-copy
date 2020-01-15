@@ -28,7 +28,7 @@ class DownloadTooler{
     var directory = new Directory(fname);
     if(!directory.existsSync()){
       directory.createSync();
-      print(directory.absolute.path);
+      
     }
   }
 
@@ -49,7 +49,6 @@ class DownloadTooler{
     var entityList = path.listSync(recursive: true);
     for(FileSystemEntity entity in entityList) {
       if(entity is File){
-        print(entity.path);
         var tag = getTag(entity.path);
         var name = getName(entity.path);
         Core.instance.sqlTooler.addFile(tag, name);
@@ -76,7 +75,6 @@ class DownloadTooler{
     var path = type == 1 ? "$dir/poster/$fname.jpg" : "$dir/video/$fname.mp4";
     Response response = await dio.download(url, path);
     if(response.statusCode == 200){
-      print(type == 1 ? "下载图片成功" : "下载视频成功");
       if(type == 1){
         Core.instance.sqlTooler.updatePoster(_id, path.split("/").last);
       }
@@ -85,32 +83,28 @@ class DownloadTooler{
       }
     }
     else{
-      print(type == 1 ? "下载图片失败" : "下载视频失败");
+      
     }
   }
 
   Future<void> _deleteFile(path) async{
-    // var path = item["video"];
-    print(path);
     if(path != null){
       try{
         var file = new File(path);
         if(file.existsSync()){
           await file.delete();
-          print("【删除成功】" + path);
         }
         else{
-          print("【文件不存在】" + path);
+          
         }
       }
       catch (e){
-        print("文件异常");
-        print(e);
+        
       }
 
     }
     else{
-      print("【文件不存在】");
+      
     }
     
   }
@@ -153,29 +147,17 @@ class DownloadTooler{
       // var newPath = path.toString().replaceFirst("/video", "/$folder");
       if(file.existsSync()){
         await file.rename(newPath);
-        print("【移动成功】" + newPath);
       }
       else{
-        print("【文件不存在】" + path);
+        
       }
       // await Core.instance.sqlTooler.moveVideo(item["id"], newPath);
     }
     else{
-      print("【文件不存在】" + path);
+      
     }
   }
 
-  // static Future<void> start(url) async{
-  //   print("下载图片");
-  //   print(url);
-  //   var dio = new Dio();
-  //   var dir = await getApplicationDocumentsDirectory();
-  //   print("${dir.path}/1234.jpg");
-  //   await dio.download(url, "${dir.path}/777.jpg", onReceiveProgress: (rec, total){
-  //     var progress = ((rec / total) * 100).toStringAsFixed(0) + "%";
-  //     print(progress);
-  //   });
-  // }
   Future<void> start(id, poster, src) async{
     _id = id;
     var fname = getTimer();
@@ -207,27 +189,20 @@ class DownloadTooler{
   }
 
   Future<void> writeData(url) async{
-    print("下载图片");
-    print(url);
     var list = url.split("/");
-    print(list[list.length - 1]);
     // var dir = await getApplicationDocumentsDirectory();
     var dir = await getTemporaryDirectory();
     var file = new File("${dir.path}/www123oop.txt");
-    print(dir);
-    print(dir.path);
+   
     if(file.existsSync()){
       var str = file.readAsStringSync();
-      print(str);
     }
     file.writeAsStringSync(url + "+++" + Random().nextDouble().toString());
     // var str = file.readAsStringSync();
-    print("写入文件成功");
-    print(file.readAsStringSync());
   }
 
   void test(){
-    print("downloadTest");
+    
   }
 
   String getPosterPath(item){

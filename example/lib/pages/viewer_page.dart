@@ -34,7 +34,6 @@ class _ViewerPageState extends State<ViewerPage> {
 
 
   void _onChange(n){
-    print("$n");
     setState(() {
       _id = n;
     });
@@ -79,7 +78,6 @@ class _ViewerPageState extends State<ViewerPage> {
               autoplay: false,
               index: _id,
               onIndexChanged: (n){_onChange(n);},
-              // onTap: (index) => print('点击了第$index个'),
             ),
             Positioned(
               left: ScreenUtil().setWidth(300),

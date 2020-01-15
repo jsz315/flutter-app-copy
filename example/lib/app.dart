@@ -1,15 +1,11 @@
-import 'package:copyapp_example/pages/config_page.dart';
+import 'package:copyapp_example/config.dart';
+import 'package:copyapp_example/pages/capture_page.dart';
 import 'package:copyapp_example/pages/cover_page.dart';
+import 'package:copyapp_example/pages/system_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import './pages/image_page.dart';
-
-import './pages/detail_page.dart';
 import 'package:flutter/material.dart';
-
 import './pages/home_page.dart';
-import './tooler/download_tooler.dart';
 
 class App extends StatefulWidget {
   @override
@@ -22,8 +18,8 @@ class _AppState extends State<App> {
   var _list = [
     new HomePage(),
     new CoverPage(),
-    new ImagePage(),
-    new ConfigPage()
+    new CapturePage(),
+    new SystemPage()
   ];
 
   @override
@@ -41,18 +37,8 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-//    _controller = new TabController(
-//      vsync: ScrollableState(),
-//      length: 3
-//    );
-//    _controller.addListener((){
-//      print(_controller.index);
-//    });
-
-    // DownloadTooler.init();
 
     var permission =  PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-    print("permission status is " + permission.toString());
     PermissionHandler().requestPermissions(<PermissionGroup>[
       PermissionGroup.storage, // 在这里添加需要的权限
     ]);
@@ -68,8 +54,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
-
-    print("app build *************");
     
     return Scaffold(      
       body: SafeArea(
@@ -87,22 +71,22 @@ class _AppState extends State<App> {
           BottomNavigationBarItem(
             backgroundColor: Colors.black,
             icon: Icon(Icons.home),
-            title: Text("主页")
+            title: Text(Config.home)
           ),
           BottomNavigationBarItem(
               backgroundColor: Colors.black,
             icon: Icon(Icons.color_lens),
-            title: Text("封面")
+            title: Text(Config.cover)
           ),
           BottomNavigationBarItem(
               backgroundColor: Colors.black,
             icon: Icon(Icons.panorama),
-            title: Text("截图")
+            title: Text(Config.capture)
           ),
           BottomNavigationBarItem(
               backgroundColor: Colors.black,
               icon: Icon(Icons.camera),
-              title: Text("系统")
+              title: Text(Config.system)
           ),
         ],
       )

@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:copyapp_example/components/canvas_view.dart';
 import 'package:copyapp_example/model/image_rect_data.dart';
 import 'package:copyapp_example/pages/clip_page.dart';
-import 'package:copyapp_example/pages/image_page.dart';
 import 'package:copyapp_example/pages/pick_page.dart';
 import 'package:copyapp_example/pages/viewer_page.dart';
 import 'package:copyapp_example/tooler/image_tooler.dart';
@@ -59,27 +57,25 @@ class _EditImageState extends State<EditImage> {
   }
 
   void _dragEnd(DragEndDetails e){
-    print("_dragEnd");
     if(e.velocity.pixelsPerSecond.dx > 600){
-      print("右边滑动");
       if(_dragId < 2){
         setState(() {
           _imageRectDatas.insert(_dragId + 1, _imageRectDatas.removeAt(_dragId));
         });
       }
       else{
-        print("超出范围");
+        
       }
     }
     else if(e.velocity.pixelsPerSecond.dx < -600){
-      print("左边滑动");
+      
       if(_dragId > 0) {
         setState(() {
           _imageRectDatas.insert(_dragId - 1, _imageRectDatas.removeAt(_dragId));
         });
       }
       else{
-        print("超出范围");
+        
       }
     }
   }
@@ -93,7 +89,6 @@ class _EditImageState extends State<EditImage> {
   }
 
   void _chooseImage(n){
-    print(n);
     Navigator.push(
         context,
         new MaterialPageRoute(
@@ -102,8 +97,7 @@ class _EditImageState extends State<EditImage> {
             )
         )
     ).then((data) async{
-      print("返回的数据");
-      print(data);
+      
       if(data != null){
         setState(() {
           _paths[n] = data;
@@ -119,11 +113,7 @@ class _EditImageState extends State<EditImage> {
 
   void _editImage(LongPressEndDetails e){
     var n = getHitIndex(e.globalPosition);
-    // if(_paths[n]["type"] == "assets"){
-    //   ToastTooler.toast(context, msg: "先选择图片");
-    //   return;
-    // }
-    // print(n);
+   
      Navigator.push(
          context,
          new MaterialPageRoute(
@@ -132,8 +122,7 @@ class _EditImageState extends State<EditImage> {
              )
          )
      ).then((data){
-       print("返回的数据");
-       print(data);
+       
        if(data != null){
          setState(() {
            _imageRectDatas[n].rect = data;
@@ -185,10 +174,8 @@ class _EditImageState extends State<EditImage> {
   }
 
    void _capture() async{
-    print("开始截屏");
     ImageTooler.capture(_imgKey, context);
   }
-
 
   @override
   Widget build(BuildContext context) {

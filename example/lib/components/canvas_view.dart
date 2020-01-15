@@ -18,40 +18,30 @@ class CanvasView extends CustomPainter{
     mHelpPaint.color = Color(0xffBBC3C5);
     mHelpPaint.isAntiAlias = true;
 
-    print("======== size ------");
-    print(size);
-
-    //用Rect构建一个边长50,中心点坐标为100,100的矩形
-    Rect rect = Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: 80.0);
     //根据上面的矩形,构建一个圆角矩形
     RRect rrect = RRect.fromRectAndRadius(Rect.fromLTWH(2, 2, size.width - 4, size.height - 4), Radius.circular(20.0));
     canvas.drawRRect(rrect, mHelpPaint);
-
-    // ByteData data = image.toByteData();
-    // canvas.scale(1.5);
-    // canvas.translate(-image.width / 2, -image.height / 2);
-//    canvas.translate(-80, -120);
-    // canvas.drawImage(
-    //   image, 
-    //   Offset(0, 0),
-    //   mHelpPaint
-    // );
 
     canvas.drawRRect(rrect, mHelpPaint);
     draw(canvas, size, mHelpPaint);
   }
 
   void draw(Canvas canvas, Size size, Paint paint){
+    if(imageRectDatas == null){
+      
+    }
     var w = size.width / 3;
     for(var i = 0; i < 3; i++){
-      var image = imageRectDatas[i].image;
-      
-      print("draw $i ==========");
-      if(image != null){
-        var srcRect = imageRectDatas[i].rect == null ? Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()) : imageRectDatas[i].rect;
-        var dstRect = Rect.fromLTWH(i * w, 0, w, size.height);
-        canvas.drawImageRect(image, srcRect, dstRect, paint);
+      if(imageRectDatas[i] != null){
+        var image = imageRectDatas[i].image;
+        print(image);
+        if(image != null){
+          var srcRect = imageRectDatas[i].rect == null ? Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()) : imageRectDatas[i].rect;
+          var dstRect = Rect.fromLTWH(i * w, 0, w, size.height);
+          canvas.drawImageRect(image, srcRect, dstRect, paint);
+        }
       }
+      
     }
   }
 
@@ -60,33 +50,4 @@ class CanvasView extends CustomPainter{
     // TODO: implement shouldRepaint
     return true;
   }
-
-
-
-  // Future<ui.Image> imageLoader() {
- 
-  //   ImageStream imageStream = NetworkImage(
- 
-  //           'https://avatars0.githubusercontent.com/u/45789654?s=460&v=4')
- 
-  //       .resolve(ImageConfiguration.empty);
- 
-  //   Completer<ui.Image> imageCompleter = Completer<ui.Image>();
- 
-  //   ImageStreamListener imageListener(ImageInfo info, bool synchronousCall) {
- 
-  //     ui.Image image = info.image;
- 
-  //     imageCompleter.complete(image);
- 
-  //     imageStream.removeListener(imageListener);
- 
-  //   }
- 
-  //   imageStream.addListener(imageListener);
- 
-  //   return imageCompleter.future;
- 
-  // }
-  
 }

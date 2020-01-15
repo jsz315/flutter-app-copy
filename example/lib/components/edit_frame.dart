@@ -24,7 +24,7 @@ class EditFrame extends StatefulWidget {
     // this.togglerEdit,
     this.title,
     this.tip,
-    this.canEdit = true
+    this.canEdit = true,
   }) : super(key: key);
 
   @override
@@ -32,16 +32,18 @@ class EditFrame extends StatefulWidget {
 }
 
 class _EditFrameState extends State<EditFrame> {
+  
+  var _tags;
 
-  EditMenu _editMenu;
-  TitleBar _titleBar;
+  @override
+  void initState(){
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _editMenu = new EditMenu(tip: widget.tip,);
-    _titleBar = new TitleBar(tip: widget.tip, title: widget.title, canEdit: widget.canEdit,);
   }
 
   @override
@@ -52,7 +54,7 @@ class _EditFrameState extends State<EditFrame> {
           body: Container(
             child: Column(
               children: <Widget>[
-                _titleBar,
+                TitleBar(tip: widget.tip, title: widget.title, canEdit: widget.canEdit,),
                 Expanded(
                   flex: 1,
                   child: RefreshIndicator(child: widget.child, onRefresh: widget.onRefresh)
@@ -61,7 +63,7 @@ class _EditFrameState extends State<EditFrame> {
             ),
           ),
         ),
-        _editMenu
+        new EditMenu(tip: widget.tip)
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:copyapp_example/components/edit_frame.dart';
 import 'package:copyapp_example/components/edit_image.dart';
+import 'package:copyapp_example/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -35,26 +36,10 @@ class _CoverPageState extends State<CoverPage> with AutomaticKeepAliveClientMixi
   Widget build(BuildContext context) {
     super.build(context);
     return EditFrame(
-      title: "封面",
+      title: Config.cover,
       tip: "edit",
       canEdit: false,
       onRefresh: _update,
-
-      // child: Swiper(
-      //         itemBuilder: _swiperBuilder,
-      //         itemCount: 3,
-      //         pagination: new SwiperPagination(
-      //           builder: DotSwiperPaginationBuilder(
-      //             color: Colors.black54,
-      //             activeColor: Colors.white,
-      //           )
-      //         ),
-      //         control: new SwiperControl(),
-      //         scrollDirection: Axis.horizontal,
-      //         autoplay: false,
-      //         onTap: (index) => print('点击了第$index个'),
-      //       ),
-
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[

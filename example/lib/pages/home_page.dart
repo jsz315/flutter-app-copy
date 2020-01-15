@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:copyapp_example/components/check_box.dart';
 import 'package:copyapp_example/components/edit_frame.dart';
+import 'package:copyapp_example/config.dart';
+import 'package:copyapp_example/model/movie_model.dart';
 import 'package:copyapp_example/tooler/event_tooler.dart';
 import 'package:copyapp_example/tooler/toast_tooler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +12,6 @@ import 'package:provider/provider.dart';
 import './player_page.dart';
 
 import '../core.dart';
-import '../movie_model.dart';
 
 import './web_page.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   var _isEdit = false;
   List _selectedList = [];
   var _tip = "home";
+  var _tags = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -38,7 +40,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ToastTooler.toast(context, msg: "链接不存在");
       return;
     }
-    print("goto web ${movie['link']}");
     Navigator.push(
         context,
         new MaterialPageRoute(
@@ -97,9 +98,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     super.didChangeDependencies();
 
     _update();
-    print("--2 Core.instance.eventTooler.eventBus--");
     Core.instance.eventTooler.eventBus.on<EditEvent>().listen((e){
-      print("--HomePage EditEvent--");
+      
       if(e.tip == _tip){
         setState(() {
           _isEdit = e.edit;
@@ -109,21 +109,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     });
 
     Core.instance.eventTooler.eventBus.on<SelectEvent>().listen((e){
-      print("--SelectEvent--");
       if(e.tip == _tip){
         _chooseAll(e.select);
       }
     });
 
     Core.instance.eventTooler.eventBus.on<DeleteEvent>().listen((e){
-      print("--DeleteEvent--");
       if(e.tip == _tip){
         _deleteItems();
       }
     });
 
     Core.instance.eventTooler.eventBus.on<MoveEvent>().listen((e){
-      print("--MoveEvent--");
       if(e.tip == _tip){
         _moveItems(e.tag);
       }
@@ -133,8 +130,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   Future<void> _update() async{
     List<Map> movies = await Core.instance.sqlTooler.movies();
-    // var movieModel = Provider.of<MovieModel>(context);
-    // movieModel.update(movies);
+    var movieModel = Provider.of<MovieModel>(context);
+    movieModel.update(movies);
+
     var slist = [];
     movies.forEach((val){
       slist.add(false);
@@ -143,6 +141,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       _movies = movies;
       _selectedList = slist;
       _isEdit = false;
+      _tags =_getTags();
     });
   }
 
@@ -161,26 +160,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     });
   }
 
-  // void _togglerEdit(c){
-  //   setState(() {
-  //     _isEdit = c;
-  //   });
-  // }
-
   Future<void> _deleteItems() async{
     var selects = _selectedList.sublist(0);
-    print("selects before");
-    print(selects);
-    print(_selectedList);
 
     for(var i = 0; i < selects.length; i++){
       if(selects[i]){
         await Core.instance.downloadTooler.deleteVideoItem(_movies[i]);
       }
     }
-    print("selects after");
-    print(selects);
-    print(_selectedList);
+    
     await _update();
 
     ToastTooler.toast(context, msg: "操作成功");
@@ -194,24 +182,30 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 
   Future<void> _moveItems(tag) async{
-    print("创建目录 $tag");
      Core.instance.downloadTooler.createVideoTagDir(tag);
      Core.instance.downloadTooler.createPosterTagDir(tag);
 
      var selects = _selectedList.sublist(0);
-    print("selects before");
-     print(selects);
-    print(_selectedList);
+ 
      for(var i = 0; i < selects.length; i++){
        if(selects[i]){
          await Core.instance.downloadTooler.moveVideoItem(_movies[i], tag);
        }
      }
-    print("selects after");
-    print(selects);
-    print(_selectedList);
+     
      await _update();
      ToastTooler.toast(context, msg: "操作成功");
+  }
+
+  List _getTags(){
+    var tags = [];
+    for(var i = 0; i < _movies.length; i++){
+      var tag = _movies[i]["tag"];
+      if(tag != null && tags.indexOf(tag) == -1){
+        tags.add(tag);
+      }
+    }
+    return tags;
   }
 
   Widget _getItem(id){
@@ -297,24 +291,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         ),
       ),
     );
-    // GestureDetector(
-    //   onTap: () {
-    //     _itemClick(id);
-    //   },
-    //   child: Container(
-    //     padding: EdgeInsets.only(
-    //         left: _isEdit ? 0 : 20.0, top: 10.0, right: 20.0, bottom: 10.0),
-    //     decoration: BoxDecoration(
-    //         border: Border(
-    //             bottom: BorderSide(
-    //               color: Color.fromARGB(255, 240, 240, 240),
-    //               width: ScreenUtil().setWidth(1),
-    //             ))),
-    //     child: Row(
-    //       children: list
-    //     ),
-    //   ),
-    // );
   }
 
   @override
@@ -328,14 +304,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         });
 
     return new EditFrame(
-      // onDelete: _deleteItems,
-      // onMove: _moveItems,
-      // togglerEdit: _togglerEdit,
-      // togglerSelect: _chooseAll,
-      title: "主页",
-      tip: _tip,
-      onRefresh: _update,
-      child: _listView
-    );
+        title: Config.home,
+        tip: _tip,
+        onRefresh: _update,
+        child: _listView
+      );
+    
   }
 }

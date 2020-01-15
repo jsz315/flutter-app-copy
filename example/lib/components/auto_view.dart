@@ -31,15 +31,11 @@ class _AutoViewState extends State<AutoView> {
         break;
       }
     }
-    print("当前下载数据");
-    print(_movie);
-    // _callJavascript();
   }
 
   void _callJavascript(){
     var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
-      print(res);
       String str1 = res.toString();
       var aim = str1.replaceAll(new RegExp(r'\\'), "");
       aim = aim.substring(1, aim.length -1 );
@@ -89,7 +85,6 @@ class _AutoViewState extends State<AutoView> {
               _setTitle();
             },
             navigationDelegate: (NavigationRequest navigationRequest){
-              print("内部跳转：${navigationRequest.url}");
               return NavigationDecision.navigate;
             },
           ),

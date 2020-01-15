@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:copyapp_example/components/auto_view.dart';
 import 'package:copyapp_example/components/edit_frame.dart';
+import 'package:copyapp_example/config.dart';
 import 'package:copyapp_example/pages/auto_page.dart';
 import 'package:copyapp_example/tooler/alert_tooler.dart';
 import 'package:copyapp_example/tooler/channel_tooler.dart';
@@ -14,12 +15,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../core.dart';
 
-class ConfigPage extends StatefulWidget {
+class SystemPage extends StatefulWidget {
   @override
-  _ConfigPageState createState() => _ConfigPageState();
+  _SystemPageState createState() => _SystemPageState();
 }
 
-class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMixin implements SystemListener {
+class _SystemPageState extends State<SystemPage> with AutomaticKeepAliveClientMixin implements SystemListener {
   GlobalKey _autoKey = GlobalKey();
 
   bool _running = false;
@@ -45,14 +46,12 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
 
    @override
   onReceive(obj) {
-    print(obj);
     setState(() {
       _copyData = obj;
     });
 //    ToastTooler.toast(context, msg: "数据已经复制", position: ToastPostion.bottom);
 
      if(tid != null){
-       print("取消前次延时回调方法");
        tid.cancel();
        toastTimer++;
      }
@@ -86,8 +85,7 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
         break;
       }
     }
-    print("当前下载数据");
-    print(_movie);
+    
   }
   
 
@@ -135,7 +133,6 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
 
   void _findNoVideo() async{
     var res = await Core.instance.sqlTooler.moviesNoVideo();
-    print(res);
   }
 
   void _findSameVideo() async{
@@ -147,7 +144,6 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
         total++;
       }
     }
-    print("重复数据总数$total");
   }
 
   Widget _getSwitch(title, tip, value, onChanged){
@@ -220,7 +216,7 @@ class _ConfigPageState extends State<ConfigPage> with AutomaticKeepAliveClientMi
     
     // TODO: implement build
     return EditFrame(
-      title: "系统",
+      title: Config.system,
       tip: "edit",
       canEdit: false,
       onRefresh: _update,

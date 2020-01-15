@@ -24,7 +24,7 @@ class ImageTooler{
       await Core.instance.downloadTooler.saveImage(pngBytes);
       ToastTooler.toast(context, msg: "保存图片成功");
     } catch (e) {
-      print(e);
+      
       ToastTooler.toast(context, msg: "保存图片失败");
     }
   }

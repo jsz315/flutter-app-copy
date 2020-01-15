@@ -28,9 +28,7 @@ class _PlayerPageState extends State<PlayerPage> {
   void initState() {
     super.initState();
     _movie = widget.movie;
-    print(_movie);
     _path = Core.instance.downloadTooler.getVideoPath(_movie);
-    print("initState");
     _controller = VideoPlayerController.file(
         File(_path),
       )
@@ -52,7 +50,7 @@ class _PlayerPageState extends State<PlayerPage> {
       ToastTooler.toast(context, msg: "保存图片成功");
 
     } catch (e) {
-      print(e);
+      
       ToastTooler.toast(context, msg: "保存图片失败");
     }
   }
@@ -70,14 +68,14 @@ class _PlayerPageState extends State<PlayerPage> {
       ToastTooler.toast(context, msg: "保存图片成功");
 
     } catch (e) {
-      print(e);
+      
       ToastTooler.toast(context, msg: "保存图片失败");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build");
+    
     return MaterialApp(
       title: '视频播放',
       theme: ThemeData.dark(),

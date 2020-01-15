@@ -12,7 +12,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../movie_model.dart';
 import '../tooler/download_tooler.dart';
 
 class AutoPage extends StatefulWidget {
@@ -48,7 +47,6 @@ class _AutoPageState extends State<AutoPage> {
       _running = false;
     });
     if(_timer != null){
-      print("取消前次延时回调方法");
       _timer.cancel();
     }
   }
@@ -56,7 +54,6 @@ class _AutoPageState extends State<AutoPage> {
   @override
   void dispose(){
     if(_timer != null){
-      print("取消前次延时回调方法");
       _timer.cancel();
     }
     super.dispose();
@@ -77,7 +74,7 @@ class _AutoPageState extends State<AutoPage> {
 
   Future<bool> _hasNext() async{
     var res = await Core.instance.sqlTooler.moviesNoVideo();
-    print(res);
+    
     _noVideos = res;
     if(_noVideos.length > 0){
       return true;
@@ -100,21 +97,16 @@ class _AutoPageState extends State<AutoPage> {
   }
 
   void _callJavascript(){
-    print("开始下载");
     var js = StringTooler.getJs(_movie["word"]);
     _webViewController.evaluateJavascript(js).then((res)async{
-      print(res);
       if(res == "null"){
-        print("删除下载失败的链接");
+        
         await Core.instance.downloadTooler.deleteVideoItem(_movie);
       }
       else{
-        print("fuck ===  fuck");
-        print(res);
 
         String str1 = res.toString();
         
-        print(str1);
         var aim = str1.replaceAll(new RegExp(r'\\'), "");
         aim = aim.substring(1, aim.length -1 );
         dynamic item = json.decode(aim);
@@ -135,21 +127,15 @@ class _AutoPageState extends State<AutoPage> {
 
   void _setTitle(){
     if(_webViewController == null){
-      print("页面尚未初始化");
+      
       return;
     }
     _webViewController.evaluateJavascript("document.title").then((res){
-      // setState(() {
-      //   _title = res;
-      //   _tips.add("获取标题成功");
-      // });
-      print("获取标题成功");
+
       Core.instance.sqlTooler.updateVideoTitle(_movie["id"], res);
 
       if(_running){
-        print("自动下载");
         if(_timer != null){
-          print("取消前次延时回调方法");
           _timer.cancel();
         }
         _timer = new Timer(Duration(seconds: 3), _callJavascript);
@@ -178,8 +164,6 @@ class _AutoPageState extends State<AutoPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build current movie");
-    print(_movie);
 
     Widget listView = _getTips();
 
@@ -191,14 +175,13 @@ class _AutoPageState extends State<AutoPage> {
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController){
           _webViewController = webViewController;
-          print("开始加载页面");
-//              _webViewController.loadUrl(_movie["link"]);
+          
         },
         onPageFinished: (url){
           _setTitle();
         },
         navigationDelegate: (NavigationRequest navigationRequest){
-          print("内部跳转：${navigationRequest.url}");
+          
           return NavigationDecision.navigate;
         },
       );
