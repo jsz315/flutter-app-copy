@@ -83,10 +83,10 @@ class _ViewerPageState extends State<ViewerPage> {
               left: ScreenUtil().setWidth(300),
               bottom: 10,
               width: ScreenUtil().setWidth(150),
-              height: ScreenUtil().setWidth(40),
+              height: ScreenUtil().setWidth(60),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(12),
                   color: Color.fromARGB(90, 0, 0, 0)
                 ),
                 child: Center(

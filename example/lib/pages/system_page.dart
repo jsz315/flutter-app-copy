@@ -164,6 +164,7 @@ class _SystemPageState extends State<SystemPage> with AutomaticKeepAliveClientMi
                   flex: 1,
                 ),
                 CupertinoSwitch(
+                  activeColor: Colors.amber,
                   value: value,
                   onChanged: onChanged,
                 )

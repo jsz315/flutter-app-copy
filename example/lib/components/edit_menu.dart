@@ -112,18 +112,23 @@ class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin
     for(var i = 0; i < _tags.length; i++){
       var tag = _tags[i];
       list.add(
-        RaisedButton(
-          padding: EdgeInsets.all(2),
-          onPressed: (){_autoFolder(tag);},
-          child: Text(tag),
-          shape: new RoundedRectangleBorder(
-            // side: BorderSide(
-            //   color: Colors.amber,
-            //   width: 30
-            // ),
-            borderRadius: BorderRadius.circular(20)
-          )
+        SizedBox(
+          height: 24,
+          child: RaisedButton(
+              padding: EdgeInsets.all(2),
+              onPressed: (){_autoFolder(tag);},
+              child: Text(tag, style: TextStyle(color: Colors.white,)),
+              color: Colors.black38,
+              shape: new RoundedRectangleBorder(
+                // side: BorderSide(
+                //   color: Colors.amber,
+                //   width: 30
+                // ),
+                  borderRadius: BorderRadius.circular(16)
+              )
+          ),
         )
+
       );
     }
     showDialog(
@@ -152,6 +157,7 @@ class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin
                 ),
                 Wrap(
                   spacing: 10,
+                  runSpacing: 10,
                   children: list,
                 )
                 ],
@@ -184,24 +190,22 @@ class _EditMenuState extends State<EditMenu> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+
     return AnimatedBuilder(
       animation: animation,
       builder: (BuildContext ctx, Widget child){
         return Positioned(
-          left: ScreenUtil().setWidth(750 / 2 - 400 / 2),
+          left: 0,
           bottom: animation.value,
-          child: Center(
-            child: Container(
-              width: ScreenUtil().setWidth(400),
+          child: Container(
+            width: ScreenUtil().setWidth(750),
+            child: Center(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever), label: Text("删除")),
-                  FlatButton.icon(onPressed: (){_popInput();}, icon: Icon(Icons.move_to_inbox), label: Text("移动"))
+                  FlatButton.icon(onPressed: (){_deleteItems();}, icon: Icon(Icons.delete_forever, color: Colors.white,), label: Text("删除", style: TextStyle(color: Colors.white),), color: Colors.black,),
+                  FlatButton.icon(onPressed: (){_popInput();}, icon: Icon(Icons.move_to_inbox, color: Colors.white,), label: Text("移动", style: TextStyle(color: Colors.white),), color: Colors.black,)
                 ],
-              ),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(180, 255, 240, 0),
-                borderRadius: BorderRadius.circular(10)
               ),
             )
           )

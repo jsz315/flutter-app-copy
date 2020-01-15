@@ -133,30 +133,36 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     var movieModel = Provider.of<MovieModel>(context);
     movieModel.update(movies);
 
-    var slist = [];
-    movies.forEach((val){
-      slist.add(false);
-    });
+    // var slist = [];
+    // movies.forEach((val){
+    //   slist.add(false);
+    // });
     setState(() {
       _movies = movies;
-      _selectedList = slist;
+      _selectedList = movieModel.selects;
       _isEdit = false;
       _tags =_getTags();
     });
   }
 
   void _chooseAll(c){
+    var movieModel = Provider.of<MovieModel>(context);
     setState(() {
-      for(var i = 0; i < _selectedList.length; i++){
-        _selectedList[i] = c;
-      }
+      movieModel.selectAll(c);
+      _selectedList = movieModel.selects;
+      // for(var i = 0; i < _selectedList.length; i++){
+      //   _selectedList[i] = c;
+      // }
     });
 
   }
 
   void _chooseOne(c, id){
+    var movieModel = Provider.of<MovieModel>(context);
     setState(() {
-      _selectedList[id] = c;
+      movieModel.selectOne(id, c);
+      _selectedList = movieModel.selects;
+      // _selectedList[id] = c;
     });
   }
 
@@ -297,11 +303,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   Widget build(BuildContext context) {
     super.build(context);
 
-    ListView _listView = ListView.builder(
+    ListView _listView = ListView.separated(
         itemCount: _movies.length,
         itemBuilder: (BuildContext context, int id) {
           return _getItem(id);
-        });
+        },
+        separatorBuilder: (BuildContext context, int id){
+          return Container(height: ScreenUtil().setWidth(1), color: Colors.black12,);
+        },
+      );
 
     return new EditFrame(
         title: Config.home,

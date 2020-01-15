@@ -72,6 +72,16 @@ class _TitleBarState extends State<TitleBar> {
   }
 
   Widget _getAppBar(){
+    var counter;
+    if(widget.title == Config.home){
+      var movieModel = Provider.of<MovieModel>(context);
+      counter = movieModel.selectedCounter();
+    }
+    else if(widget.title == Config.capture){
+      var captureModel = Provider.of<CaptureModel>(context);
+      counter = captureModel.selectedCounter();
+    }
+
     var list = <Widget>[
       Positioned(
         left: 0,
@@ -108,7 +118,7 @@ class _TitleBarState extends State<TitleBar> {
                 value: _isSelected,
                 onChanged: (c){_togglerSelect(c);},
               ),
-              Text("全选", style: TextStyle(color: Colors.white),)
+              Text("全选 $counter", style: TextStyle(color: Colors.white),)
             ],
           ),
         ));

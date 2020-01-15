@@ -74,22 +74,20 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
 
     var captureModel = Provider.of<CaptureModel>(context);
     captureModel.update(captures);
-
-    var slist = [];
-    captures.forEach((val){
-      slist.add(false);
-    });
-
+    
     setState(() {
       _datas = captures;
-      _selectedList = slist;
+      _selectedList = captureModel.selects;
       _isEdit = false;
     });
   }
 
   void _chooseOne(c, id){
+    var captureModel = Provider.of<CaptureModel>(context);
     setState(() {
-      _selectedList[id] = c;
+      // _selectedList[id] = c;
+      captureModel.selectOne(id, c);
+      _selectedList = captureModel.selects;
     });
   }
 
@@ -171,10 +169,12 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
 
 
   void _chooseAll(c){
+    var captureModel = Provider.of<CaptureModel>(context);
     setState(() {
-      for(var i = 0; i < _selectedList.length; i++){
-        _selectedList[i] = c;
-      }
+      // for(var i = 0; i < _selectedList.length; i++){
+      //   _selectedList[i] = c;
+      // }
+      _selectedList = captureModel.selects;
     });
   }
   
