@@ -102,8 +102,10 @@ class _PlayerPageState extends State<PlayerPage> {
                       : _controller.play();
                 });
               },
+              backgroundColor: Colors.blue,
               child: Icon(
                 _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
               ),
             ),
           ),
@@ -111,10 +113,10 @@ class _PlayerPageState extends State<PlayerPage> {
               left: 20,
               bottom: 20,
               child: Container(
-                width: ScreenUtil().setWidth(500),
-                height: ScreenUtil().setWidth(96),
+                // width: ScreenUtil().setWidth(500),
+                // height: ScreenUtil().setWidth(96),
                 decoration: BoxDecoration(
-                  color: Colors.amberAccent,
+                  color: Colors.amber,
                   borderRadius: BorderRadius.circular(8)
                 ),
                 child: Row(

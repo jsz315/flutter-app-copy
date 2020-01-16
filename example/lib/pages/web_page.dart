@@ -152,7 +152,8 @@ class _WebPageState extends State<WebPage> {
       
       floatingActionButton: FloatingActionButton(
         heroTag: "web",
-        child: Icon(Icons.archive),
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.archive, color: Colors.white,),
         onPressed: (){
           _callJavascript();
         },

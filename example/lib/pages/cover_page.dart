@@ -17,21 +17,6 @@ class _CoverPageState extends State<CoverPage> with AutomaticKeepAliveClientMixi
 
   }
 
-  Widget _swiperBuilder(BuildContext context, int index) {
-    return Container(
-      child: Text("123"),
-      decoration: BoxDecoration(
-        color: Colors.amber,
-        border: Border(
-          bottom: BorderSide(
-            color: Color.fromARGB(255, 240, 240, 240),
-            width: 1,
-          )
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -43,10 +28,14 @@ class _CoverPageState extends State<CoverPage> with AutomaticKeepAliveClientMixi
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Transform.scale(
-              child: new EditImage(),
-              scale: 0.9,
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Transform.scale(
+                child: new EditImage(),
+                scale: 0.9,
+              ),
             ),
+            
           ]
         )
       ),

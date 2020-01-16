@@ -80,20 +80,26 @@ class _ViewerPageState extends State<ViewerPage> {
               onIndexChanged: (n){_onChange(n);},
             ),
             Positioned(
-              left: ScreenUtil().setWidth(300),
+              left: ScreenUtil().setWidth(0),
               bottom: 10,
-              width: ScreenUtil().setWidth(150),
+              width: ScreenUtil().setWidth(750),
               height: ScreenUtil().setWidth(60),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Color.fromARGB(90, 0, 0, 0)
-                ),
-                child: Center(
-                  child: Text("$cur/${widget.items.length}", style: TextStyle(color: Colors.amber),),
-                ) 
-              ),
-            )
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.amber
+                    ),
+                    child: Center(
+                      child: Text("$cur/${widget.items.length}", style: TextStyle(color: Colors.white),),
+                    )
+                  ),
+                ],
+              )
+            ),
         ],
       ) 
       

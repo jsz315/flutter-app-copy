@@ -158,10 +158,10 @@ class _EditImageState extends State<EditImage> {
           width: ScreenUtil().setWidth(250),
           height: ScreenUtil().setWidth(90),
           child: Container(
-            color: Colors.black12,
+            color: Colors.amber,
             child: MaterialButton(
               onPressed: (){_chooseImage(i);},
-              child: Text("选取图片"),
+              child: Text("选取图片", style: TextStyle(color: Colors.white),),
             ),
           ),
         ),
@@ -188,11 +188,11 @@ class _EditImageState extends State<EditImage> {
            _getBtns(),
            Container(
             margin: EdgeInsets.only(top: 30),
-            width: ScreenUtil().setWidth(640),
-            height: ScreenUtil().setWidth(80),
+            width: ScreenUtil().setWidth(750),
+            height: ScreenUtil().setWidth(100),
             child: MaterialButton(
-              color: Colors.amber,
-              child: new Text('生成图片'),
+              color: Colors.blue,
+              child: new Text('生成图片', style: TextStyle(color: Colors.white),),
               onPressed: (){_capture();}
             ),
           ),

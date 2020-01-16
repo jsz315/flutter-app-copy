@@ -240,11 +240,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   Container(
                     child: Text(
                       _movies[id]["tag"] == null ? "默认" : _movies[id]["tag"],
-                      style: TextStyle(fontSize: 10),),
+                      style: TextStyle(fontSize: 10, color: Colors.white),),
                     padding: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: Colors.amberAccent
+                      color: Colors.amber
                     ),
                   )
 

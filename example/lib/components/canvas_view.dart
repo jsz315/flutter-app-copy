@@ -15,11 +15,11 @@ class CanvasView extends CustomPainter{
     // TODO: implement paint
     mHelpPaint = new Paint();
     mHelpPaint.style = PaintingStyle.stroke;
-    mHelpPaint.color = Color(0xffBBC3C5);
+    mHelpPaint.color = Color(0xfff0f0f0);
     mHelpPaint.isAntiAlias = true;
 
     //根据上面的矩形,构建一个圆角矩形
-    RRect rrect = RRect.fromRectAndRadius(Rect.fromLTWH(2, 2, size.width - 4, size.height - 4), Radius.circular(20.0));
+    RRect rrect = RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width, size.height), Radius.circular(0));
     canvas.drawRRect(rrect, mHelpPaint);
 
     canvas.drawRRect(rrect, mHelpPaint);
