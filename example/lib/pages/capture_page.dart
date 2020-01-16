@@ -77,7 +77,7 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
     
     setState(() {
       _datas = captures;
-      _selectedList = captureModel.selects;
+      // _selectedList = captureModel.selects;
       _isEdit = false;
     });
   }
@@ -85,9 +85,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
   void _chooseOne(c, id){
     var captureModel = Provider.of<CaptureModel>(context);
     setState(() {
-      // _selectedList[id] = c;
       captureModel.selectOne(id, c);
-      _selectedList = captureModel.selects;
+      // _selectedList = captureModel.selects;
     });
   }
 
@@ -105,12 +104,15 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
 
   Widget getItemContainer(id) {
     var item = _datas[id];
+    var captureModel = Provider.of<CaptureModel>(context);
+    var selects = captureModel.selects;
 
     var list = <Widget>[
             Container(
+              height: double.infinity,
               child: Image.file(
                 File(Core.instance.downloadTooler.getCapturePath(item)),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
               decoration: BoxDecoration(
                 color: Colors.black
@@ -123,7 +125,7 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
               right: 0,
               bottom: 0,
               child: CheckBox(
-                value: _selectedList[id],
+                value: selects[id],
                 onChanged: (c){_chooseOne(c, id);},
               ),
         )
@@ -144,7 +146,9 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
   }
 
   Future<void> _deleteItems() async{
-    var selects = _selectedList.sublist(0);
+    var captureModel = Provider.of<CaptureModel>(context);
+    var selects = captureModel.selects.sublist(0);
+    // var selects = _selectedList.sublist(0);
     for(var i = 0; i < selects.length; i++){
       if(selects[i]){
         await Core.instance.downloadTooler.deleteCapture(_datas[i]);
@@ -157,7 +161,9 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
 
   Future<void> _moveItems(tag) async{
      Core.instance.downloadTooler.createCaptureTagDir(tag);
-     var selects = _selectedList.sublist(0);
+     var captureModel = Provider.of<CaptureModel>(context);
+    var selects = captureModel.selects.sublist(0);
+    //  var selects = _selectedList.sublist(0);
      for(var i = 0; i < selects.length; i++){
        if(selects[i] == true){
          await Core.instance.downloadTooler.moveCapture(_datas[i], tag);
@@ -174,7 +180,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
       // for(var i = 0; i < _selectedList.length; i++){
       //   _selectedList[i] = c;
       // }
-      _selectedList = captureModel.selects;
+      captureModel.selectAll(c);
+      // _selectedList = captureModel.selects;
     });
   }
   
