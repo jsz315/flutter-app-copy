@@ -111,7 +111,7 @@ class _EditImageState extends State<EditImage> {
     });
   }
 
-  void _editImage(LongPressEndDetails e){
+  void _editImage(LongPressStartDetails e){
     var n = getHitIndex(e.globalPosition);
    
      Navigator.push(
@@ -135,7 +135,8 @@ class _EditImageState extends State<EditImage> {
     return FittedBox(
                 child: SizedBox(
                   child: GestureDetector(
-                    onLongPressEnd: _editImage,
+                    onLongPressStart: (e){_editImage(e);},
+                    // onLongPressEnd: _editImage,
                     onHorizontalDragStart: _dragStart,
                     onHorizontalDragEnd: _dragEnd,
                     child: RepaintBoundary(
